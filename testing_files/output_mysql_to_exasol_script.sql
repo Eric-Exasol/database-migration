@@ -21,27 +21,6 @@ import into "TESTING_DATATYPES_SCHEMA"."TEST_YEAR" from jdbc at mysql_conn state
 
 
 
-INSERT INTO TESTING_SCHEMA."NUMERIC_TYPES" (my_tinyint, my_smallint, my_mediumint, my_int, my_bigint, my_decimal, my_float, my_double) VALUES (
-        '-128',
-        '64000',
-        '-8388608',
-        '4294967295',  
-        '42949672954295',
-        '123123123123123123123.12312312312312',
-        '1299.9999993',
-        '12.3'  
-);
-
-INSERT INTO TESTING_DATATYPES_SCHEMA."STRING_TYPES" (my_char, my_varchar, my_binary, my_varbinary,
-                          my_tinyblob, my_blob, my_mediumblob, my_longblob, 
-                          my_tinytext, my_text, my_mediumtext, my_longtext, my_enum, my_set) 
-VALUES (
-        '??? / ??? xíngsh?ngzì','??? / ??? xíngsh?ngzì', 'abc', '123',
-        'tinyblob', 'A Binary Large OBject (BLOB) is a collection of binary data stored as a single entity in a database management system. Blobs are typically images, audio or other multimedia objects, though sometimes binary executable code is stored as a blob. Database support for blobs is not universal.','mediumblob','longblob',
-        'tinytext','text','mediumtext','longtext', 'large', 'a'
-        
-);
-
 SELECT * FROM TESTING_DATATYPES_SCHEMA."TEST_TIME";
 SELECT * FROM TESTING_DATATYPES_SCHEMA."TEST_YEAR";
 SELECT * FROM TESTING_DATATYPES_SCHEMA."TEST_BIT";

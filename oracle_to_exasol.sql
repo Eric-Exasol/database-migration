@@ -1,11 +1,11 @@
-create schema database_migration;
+create schema if not exists database_migration;
 
 /* 
 	This script will generate create schema, create table and create import statements 
 	to load all needed data from an oracle database. Automatic datatype conversion is
 	applied whenever needed. Feel free to adjust it. 
 */
-
+--/
 create or replace script database_migration.ORACLE_TO_EXASOL (
 CONNECTION_NAME				 -- name of the database connection inside exasol -> e.g. mysql_db
 ,IDENTIFIER_CASE_INSENSITIVE -- TRUE if identifiers should be put uppercase
@@ -162,13 +162,12 @@ success, res = pquery([[with ora_cols as(
 	),
 	cr_schema as (
 		with EXA_SCHEMAS as (select distinct EXA_SCHEMA_NAME as EXA_SCHEMA from ora_base )
-			select 'create schema "' ||  EXA_SCHEMA ||'";' as cr_schema from EXA_SCHEMAS
+			select 'create schema if not exists "' ||  EXA_SCHEMA ||'";' as cr_schema from EXA_SCHEMAS
 	),
 	cr_tables as (
-		select 'create table "' || EXA_SCHEMA_NAME || '"."' || EXA_TABLE_NAME || '" ( 
+		select 'create or replace table "' || EXA_SCHEMA_NAME || '"."' || EXA_TABLE_NAME || '" ( 
 ' || cols || '
-)
-;' as tbls from 
+);' as tbls from 
 (select EXA_SCHEMA_NAME, EXA_TABLE_NAME, 
 		group_concat( 
 		case 
@@ -185,7 +184,8 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)%' or data_type like 'TIMESTAMP' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'timestamp'
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'timestamp' 
 			when data_type = 'BOOLEAN' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'boolean'
-			else '--UNSUPPORTED DATATYPE IN COLUMN ' || EXA_COLUMN_NAME || ' Oracle Datatype: ' || data_type  end
+			-- Fallback for unsupported data types
+			else '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'varchar(2000000) /* UNSUPPORTED DATA TYPE : ' || data_type || '*/ '  end
 			
 		|| case when identity_column='YES' then ' IDENTITY' end
 		|| case when nullable='N' then ' NOT NULL' end
@@ -211,7 +211,6 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)%' or data_type like 'TIMESTAMP' then '"' || EXA_COLUMN_NAME || '"' 
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then '"' || EXA_COLUMN_NAME || '"' 
 			when data_type = 'BOOLEAN' then '"' || EXA_COLUMN_NAME || '"' 
-			else '--UNSUPPORTED DATATYPE IN COLUMN ' || COLUMN_NAME || ' Oracle Datatype: ' || data_type  
 		end
 				
 	order by column_id SEPARATOR ', 
@@ -237,7 +236,6 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)' or data_type like 'TIMESTAMP' then '"' || column_name || '"' 
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then 'cast("' || column_name || '" as TIMESTAMP)' 
 			when data_type = 'BOOLEAN' then '"' || column_name || '"' 
-			else '--UNSUPPORTED DATATYPE IN COLUMN ' || column_name || ' Oracle Datatype: ' || data_type  
 		end
 			
 	order by column_id SEPARATOR ', 
@@ -268,12 +266,12 @@ return(res)
 /
 
 -- For JDBC Connection
-CREATE CONNECTION JDBC_ORACLE  --Install JDBC driver first via EXAoperation, see https://www.exasol.com/support/browse/SOL-179
-	TO 'jdbc:oracle:thin:@//192.168.99.100:1521/xe'
-	USER 'system'
-	IDENTIFIED BY '********';
+CREATE OR REPLACE CONNECTION MY_ORACLE  --Install JDBC driver first via EXAoperation
+TO 'jdbc:oracle:thin:@//192.168.99.100:1521/xe'
+USER 'system'
+IDENTIFIED BY 'oracle';
 
-EXECUTE SCRIPT database_migration.ORACLE_TO_EXASOL('JDBC_ORACLE', true, '%APEX%','%');
+EXECUTE SCRIPT database_migration.ORACLE_TO_EXASOL('MY_ORACLE', true, '%ERIC%','%');
 
 -- For OCI Connection
 CREATE OR REPLACE CONNECTION OCI_ORACLE

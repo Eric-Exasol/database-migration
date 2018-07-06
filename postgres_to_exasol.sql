@@ -5,6 +5,8 @@ create schema database_migration;
     to load all needed data from a postgres database. Automatic datatype conversion is 
     applied whenever needed. Feel free to adjust it. 
 */
+
+--/
 create or replace script database_migration.POSTGRES_TO_EXASOL(
 CONNECTION_NAME              -- name of the database connection inside exasol -> e.g. postgres_db
 ,IDENTIFIER_CASE_INSENSITIVE -- true if identifiers should be stored case-insensitiv (will be stored upper_case)
@@ -31,7 +33,7 @@ with vv_pg_columns as (
 		') as pg order by false
 )
 ,vv_create_schemas as(
-	SELECT 'create schema "' || "exa_table_schema" || '";' as sql_text from vv_pg_columns  group by "exa_table_catalog","exa_table_schema" order by "exa_table_catalog","exa_table_schema"
+	SELECT 'create schema if not exists "' || "exa_table_schema" || '";' as sql_text from vv_pg_columns  group by "exa_table_catalog","exa_table_schema" order by "exa_table_catalog","exa_table_schema"
 )
 ,vv_create_tables as (
 	select 'create or replace table "' || "exa_table_schema" || '"."' || "exa_table_name" || '" (' || group_concat('"' || "exa_column_name" || '" ' ||
@@ -130,12 +132,15 @@ return(res)
 /
 
 -- Create a connection to the Postgres database
-create connection postgres_db to 'jdbc:postgresql://192.168.59.103:5432/dbname' user 'username' identified by 'exasolRocks!';
+create or replace connection postgres_db
+to 'jdbc:postgresql://192.168.99.100:5432/postgres'
+user 'postgres'
+identified by 'postgres';
 
 -- Finally start the import process
 execute script database_migration.POSTGRES_TO_EXASOL(
     'postgres_db', -- name of your database connection
     true,          -- case sensitivity handling for identifiers -> false: handle them case sensitiv / true: handle them case insensitiv --> recommended: true
-    '%',           -- schema filter --> '%' to load all schemas except 'information_schema' and 'pg_catalog' / '%publ%' to load all schemas like '%pub%'
+    '%test%',           -- schema filter --> '%' to load all schemas except 'information_schema' and 'pg_catalog' / '%publ%' to load all schemas like '%pub%'
     '%'            -- table filter --> '%' to load all tables 
 );
