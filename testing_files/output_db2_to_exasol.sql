@@ -1,0 +1,17 @@
+-- ### SCHEMAS ###
+create schema "TESTING";
+-- ### TABLES ###
+create or replace table "TESTING"."CHARACTER_STRINGS" ("MY_CHAR" char(15),"MY_VARCHAR" varchar(200),"MY_CLOB" varchar(2000000),"MY_GRAPHIC" char(10),"MY_VARGRAPHIC" varchar(10),"MY_DBCLOB" varchar(2000000),"MY_BLOB" /*UNKNOWN_DATATYPE:BINARY LARGE OBJECT*/ varchar(2000000));
+create or replace table "TESTING"."DATE_TYPES" ("MY_DATE" DATE,"MY_TIME" TIMESTAMP,"MY_TS" TIMESTAMP);
+create or replace table "TESTING"."NUMERICS" ("MY_BIGINT" decimal(19,0),"MY_INT" decimal(10,0),"MY_SMALLINT" decimal(5,0),"MY_REAL" DOUBLE,"MY_DOUBLE" DOUBLE,"MY_FLOAT" DOUBLE,"MY_DECIMAL" decimal(31,2),"MY_NUMERIC" decimal(10,5),"MY_DECFLOAT" DOUBLE);
+create or replace table "TESTING"."SALES" ("SALES_ID" decimal(10,0),"AMOUNT_US" /*UNKNOWN_DATATYPE:USER-DEFINED*/ varchar(2000000),"AMOUNT_CAN" /*UNKNOWN_DATATYPE:USER-DEFINED*/ varchar(2000000));
+create or replace table "TESTING"."XML_TABLE" ("MY_ID" varchar(10),"MY_XML" /*UNKNOWN_DATATYPE:XML*/ varchar(2000000));
+-- ### IMPORTS ###
+import into "TESTING"."CHARACTER_STRINGS" from jdbc at DB2_CONNECTION statement 'select MY_CHAR,MY_VARCHAR,cast(MY_CLOB as varchar(32500)),MY_GRAPHIC,MY_VARGRAPHIC,cast(MY_DBCLOB as varchar(32500)),MY_BLOB from TESTING.CHARACTER_STRINGS';
+import into "TESTING"."DATE_TYPES" from jdbc at DB2_CONNECTION statement 'select MY_DATE,MY_TIME,MY_TS from TESTING.DATE_TYPES';
+import into "TESTING"."NUMERICS" from jdbc at DB2_CONNECTION statement 'select MY_BIGINT,MY_INT,MY_SMALLINT,MY_REAL,MY_DOUBLE,MY_FLOAT,MY_DECIMAL,MY_NUMERIC,cast(MY_DECFLOAT as double) from TESTING.NUMERICS';
+import into "TESTING"."SALES" from jdbc at DB2_CONNECTION statement 'select SALES_ID,AMOUNT_US,AMOUNT_CAN from TESTING.SALES';
+import into "TESTING"."XML_TABLE" from jdbc at DB2_CONNECTION statement 'select MY_ID,MY_XML from TESTING.XML_TABLE';
+
+SELECT * FROM "TESTING"."DATE_TYPES";
+SELECT * FROM "TESTING"."NUMERICS";

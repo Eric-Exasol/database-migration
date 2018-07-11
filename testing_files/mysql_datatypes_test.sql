@@ -141,7 +141,7 @@ INSERT INTO spatial_types (my_geometry, my_point, my_linestring, my_polygon, my_
 
 SELECT AsText(my_geometry), AsText(my_point), AsText(my_linestring), AsText(my_polygon), AsText(my_gc) FROM spatial_types;
 
-/*
+
 
 DROP TABLE IF EXISTS test_json CASCADE;
 CREATE TABLE test_json (my_json JSON);
@@ -161,4 +161,3 @@ INSERT INTO test_json (my_json) VALUES (
 
 SELECT * FROM test_json;
 
-*/

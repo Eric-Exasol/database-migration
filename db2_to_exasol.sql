@@ -5,7 +5,7 @@ create schema database_migration;
      to load all needed data from a DB2 database. Automatic datatype conversion is 
      applied whenever needed. Feel free to adjust it. 
 */
-
+--/
 create or replace script database_migration.DB2_TO_EXASOL (
   CONNECTION_NAME              -- name of the database connection inside exasol -> e.g. postgres_db
   ,IDENTIFIER_CASE_INSENSITIVE -- true if identifiers should be stored case-insensitiv (will be stored upper_case)
@@ -93,14 +93,14 @@ return res
 
 -- Create a connection to the DB2 database
 create or replace CONNECTION db2_connection 
-	TO 'jdbc:db2://<<DB2_host>>:50000/<<database_name>>'
-	USER 'user'
-	IDENTIFIED BY 'exasolRocks!';
+	TO 'jdbc:db2://192.168.99.100:50000/sample'
+	USER 'db2inst1'
+	IDENTIFIED BY 'password';
 
 
 execute script database_migration.DB2_TO_EXASOL(
    'DB2_CONNECTION',      -- name of your database connection
    true,       -- case sensitivity handling for identifiers -> false: handle them case sensitiv / true: handle them case insensitiv --> recommended: true
-   '%TEST%',   -- schema filter --> '%' to load all schemas except 'SYSCAT','SYSIBM', 'SYSIBMADM', 'SYSPUBLIC', 'SYSSTAT', 'SYSTOOLS' / '%publ%' to load all schemas like '%publ%'
+   '%TESTI%',   -- schema filter --> '%' to load all schemas except 'SYSCAT','SYSIBM', 'SYSIBMADM', 'SYSPUBLIC', 'SYSSTAT', 'SYSTOOLS' / '%publ%' to load all schemas like '%publ%'
    '%'         -- table filter --> '%' to load all tables 
 );

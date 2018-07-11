@@ -17,3 +17,5 @@ addons:
     packages:
       - mysql-server
       - mysql-client
+      
+  postgresql: "9.4"
