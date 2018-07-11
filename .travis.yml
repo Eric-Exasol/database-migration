@@ -3,11 +3,3 @@ services:
   - mysql
 before_install:
   - mysql -u root --password="" < testing_files/mysql_datatypes_test.sql
-  
-addons:
-  apt:
-    sources:
-      - mysql-5.7-trusty
-    packages:
-      - mysql-server
-      - mysql-client
