@@ -2,4 +2,15 @@ language: sql
 services:
   - mysql
 before_install:
-  - mysql -u root --password="" < testing_files/mysql_datatypes_test.sql
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - sudo mysql_upgrade
+  - sudo service mysql restart
+  - mysql -u root --password="root" < testing_files/mysql_datatypes_test.sql
+  
+addons:
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+      - mysql-client
