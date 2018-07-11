@@ -2,7 +2,7 @@ language: sql
 services:
   - mysql
 before_install:
-  - mysql -u root --password="root" < testing_files/mysql_datatypes_test.sql
+  - mysql -u root --password="" < testing_files/mysql_datatypes_test.sql
   
 addons:
   apt:
