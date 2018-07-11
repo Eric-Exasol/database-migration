@@ -27,6 +27,19 @@ INSERT INTO numeric_types (my_tinyint, my_smallint, my_mediumint, my_int, my_big
 
 SELECT * FROM numeric_types;
 
+
+DROP TABLE IF EXISTS decimal_types CASCADE;
+CREATE TABLE decimal_types (
+  my_decimal    decimal(38,30),
+  my_decimal2   decimal(16,11),
+  my_decimal3   decimal(59,30),
+  my_decimal4   decimal(38,10),
+  my_decimal5   decimal(15,10)
+);
+INSERT INTO decimal_types VALUES (0.3232012,0.021121211,0,1234561450.3123,0);
+SELECT * FROM decimal_types;
+
+
 DROP TABLE IF EXISTS test_bit CASCADE;
 CREATE TABLE test_bit (my_bit bit);
 INSERT INTO test_bit (my_bit) VALUES (b'00001');

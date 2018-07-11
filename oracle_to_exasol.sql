@@ -167,7 +167,8 @@ success, res = pquery([[with ora_cols as(
 	cr_tables as (
 		select 'create or replace table "' || EXA_SCHEMA_NAME || '"."' || EXA_TABLE_NAME || '" ( 
 ' || cols || '
-);' as tbls from 
+)
+;' as tbls from 
 (select EXA_SCHEMA_NAME, EXA_TABLE_NAME, 
 		group_concat( 
 		case 
@@ -175,8 +176,8 @@ success, res = pquery([[with ora_cols as(
 			when data_type in ('VARCHAR','VARCHAR2', 'NVARCHAR2') then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'varchar(' || char_length || ')'
 			when data_type = 'CLOB' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'varchar(2000000)'
 			when data_type = 'XMLTYPE' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'varchar(2000000)'
-			when data_type in ('DECIMAL') and (data_precision is not null and data_scale is not null) then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'decimal(' || data_precision || ',' || data_scale || ')'
-			when data_type = 'NUMBER' and (data_precision is not null and data_scale is not null) then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'decimal(' || data_precision || ',' || data_scale || ')'
+			when data_type in ('DECIMAL') and (data_precision is not null and data_scale is not null) then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  case when data_scale > 36 then 'DECIMAL(' || 36 || ',' || 36 || ')' when data_precision > 36 and data_scale <= 36 then 'DECIMAL(' || 36 || ',' || data_scale || ')' when data_precision <= 36 and data_scale > data_precision then  'DECIMAL(' || data_scale || ',' || data_scale || ')' else 'DECIMAL(' || data_precision || ',' || data_scale || ')' end   
+			when data_type = 'NUMBER' and (data_precision is not null and data_scale is not null) then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  case when data_scale > 36 then 'DECIMAL(' || 36 || ',' || 36 || ')' when data_precision > 36 and data_scale <= 36 then 'DECIMAL(' || 36 || ',' || data_scale || ')' when data_precision <= 36 and data_scale > data_precision then  'DECIMAL(' || data_scale || ',' || data_scale || ')' else 'DECIMAL(' || data_precision || ',' || data_scale || ')' end
 			when data_type = 'NUMBER' and (data_length is not null and data_precision is null and data_scale is not null) then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'integer' 
 			when data_type = 'NUMBER' and (data_precision is null and data_scale is null) then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'double precision'
 			when data_type in ('DOUBLE PRECISION', 'FLOAT', 'BINARY_FLOAT', 'BINARY_DOUBLE') then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'double precision'
@@ -185,7 +186,7 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'timestamp' 
 			when data_type = 'BOOLEAN' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'boolean'
 			-- Fallback for unsupported data types
-			else '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'varchar(2000000) /* UNSUPPORTED DATA TYPE : ' || data_type || '*/ '  end
+			else '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'varchar(2000000) /* UNSUPPORTED DATA TYPE : ' || data_type || ' */ '  end
 			
 		|| case when identity_column='YES' then ' IDENTITY' end
 		|| case when nullable='N' then ' NOT NULL' end
@@ -211,6 +212,7 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)%' or data_type like 'TIMESTAMP' then '"' || EXA_COLUMN_NAME || '"' 
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then '"' || EXA_COLUMN_NAME || '"' 
 			when data_type = 'BOOLEAN' then '"' || EXA_COLUMN_NAME || '"' 
+			/* else '--UNSUPPORTED DATATYPE IN COLUMN ' || COLUMN_NAME || ' Oracle Datatype: ' || data_type  */
 		end
 				
 	order by column_id SEPARATOR ', 
@@ -236,6 +238,7 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)' or data_type like 'TIMESTAMP' then '"' || column_name || '"' 
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then 'cast("' || column_name || '" as TIMESTAMP)' 
 			when data_type = 'BOOLEAN' then '"' || column_name || '"' 
+			/* else '--UNSUPPORTED DATATYPE IN COLUMN ' || column_name || ' Oracle Datatype: ' || data_type  */
 		end
 			
 	order by column_id SEPARATOR ', 
@@ -244,21 +247,22 @@ success, res = pquery([[with ora_cols as(
 
 || ' from ' ||  '"' || owner || '"."' || table_name || '"' || ''';'  as imp from ora_base group by owner, table_name, EXA_SCHEMA_NAME, EXA_TABLE_NAME
 	)
-select '-- session parameter values are being taken from Oracle systemwide database_parameters and converted. However these should be confirmed before use.'
+select sql_text from (
+select 1 as ord_hlp,'-- session parameter values are being taken from Oracle systemwide database_parameters and converted. However these should be confirmed before use.' as sql_text
 union all
-select '-- Oracle DB''s NLS_CHARACTERSET is set to : ' || "VALUE" from nls_format where "PARAMETER"='NLS_CHARACTERSET'
+select 2, '-- Oracle DB''s NLS_CHARACTERSET is set to : ' || "VALUE" from nls_format where "PARAMETER"='NLS_CHARACTERSET'
 union all
-select '-- ALTER SESSION SET NLS_DATE_LANGUAGE=''' || "VALUE" || ''';' from nls_format where "PARAMETER"='NLS_DATE_LANGUAGE'
+select 3,'-- ALTER SESSION SET NLS_DATE_LANGUAGE=''' || "VALUE" || ''';' from nls_format where "PARAMETER"='NLS_DATE_LANGUAGE'
 union all
-select '-- ALTER SESSION SET NLS_DATE_FORMAT=''' || replace("VALUE",'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_DATE_FORMAT'
+select 4,'-- ALTER SESSION SET NLS_DATE_FORMAT=''' || replace("VALUE",'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_DATE_FORMAT'
 union all
-select '-- ALTER SESSION SET NLS_TIMESTAMP_FORMAT=''' || replace(regexp_replace("VALUE",'XF+','.FF6'),'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_TIMESTAMP_FORMAT'
+select 5,'-- ALTER SESSION SET NLS_TIMESTAMP_FORMAT=''' || replace(regexp_replace("VALUE",'XF+','.FF6'),'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_TIMESTAMP_FORMAT'
 union all
-select * from cr_schema
+select 6,a.* from cr_schema a
 union all
-select * from cr_tables
+select 7,b.* from cr_tables b
 union all
-select * from cr_import_stmts]],{c=CONNECTION_NAME, s=SCHEMA_FILTER, t=TABLE_FILTER})
+select 8,c.* from cr_import_stmts c) order by ord_hlp]],{c=CONNECTION_NAME, s=SCHEMA_FILTER, t=TABLE_FILTER})
 
 if not success then error(res.error_message) end
 

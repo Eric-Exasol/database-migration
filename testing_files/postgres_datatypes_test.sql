@@ -28,6 +28,19 @@ INSERT INTO numeric_types VALUES (
         
 SELECT * FROM testing_datatypes_schema.numeric_types;
 
+
+DROP TABLE IF EXISTS decimal_types CASCADE;
+CREATE TABLE decimal_types (
+  my_decimal    decimal(38,38),
+  my_decimal2   decimal(151,111),
+  my_decimal3   decimal(43,43),
+  my_decimal4   decimal(38,10),
+  my_decimal5   decimal(15,10)
+);
+INSERT INTO decimal_types VALUES (0.3232012,0.021121211,0,1234561450.3123,0);
+SELECT * FROM decimal_types;
+
+
 DROP TABLE IF EXISTS money CASCADE;
 CREATE TABLE money (balance money, bool boolean);
 INSERT INTO money VALUES (-92233720368547758.08, TRUE);
@@ -124,6 +137,7 @@ INSERT INTO networkaddr_types VALUES ('2001:4f8:3:ba::/64', '::ffff:1.2.3.0/128'
 INSERT INTO networkaddr_types VALUES ('128.1', '10.1.2.0/24', '0800.2b01.0203');
 SELECT * FROM networkaddr_types;
         
+DROP TABLE IF EXISTS bitstring_types CASCADE;
 CREATE TABLE bitstring_types (a BIT(3), b BIT VARYING(5));
 INSERT INTO bitstring_types VALUES (B'101', B'00');
 INSERT INTO bitstring_types VALUES (B'100', B'101');
@@ -147,3 +161,18 @@ INSERT INTO xmljson VALUES (
         }}'
 );
 SELECT * FROM xmljson;
+
+
+CREATE TYPE weekday AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+CREATE TYPE inventory_item AS (
+   name text,
+   supplier_id integer,
+   price numeric
+);
+DROP TABLE IF EXISTS other_types CASCADE; 
+CREATE TABLE other_types (item inventory_item, dayOfWeek weekday);
+INSERT INTO other_types VALUES (
+        ROW('fuzzy dice', 42, 1.99),
+        'Mon'
+);
+SELECT * FROM other_types;

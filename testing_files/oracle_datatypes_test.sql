@@ -55,11 +55,23 @@ INSERT INTO string_types VALUES (
 
 --SELECT * FROM string_types;
 
+DROP TABLE decimal_types;
+CREATE TABLE decimal_types (
+  my_decimal    decimal(38,38),
+  my_decimal2   decimal(10,11),
+  my_decimal3   decimal(3,36),
+  my_decimal4   decimal(38,10),
+  my_decimal5   decimal(15,10)
+);
+INSERT INTO decimal_types VALUES (0.3232012,0.021121211,0,1234561450.3123,0);
+SELECT * FROM decimal_types;
+
 DROP TABLE numeric_types;
 CREATE TABLE numeric_types (
   my_number number,
-  my_number2 number(36),
-  my_number3 number(10,5),
+  my_number2 number(38),
+  my_number3 number(38,38),
+  my_number4 number(10,5),
   my_float float,
   my_float2 float(126),
   my_binfloat binary_float,
@@ -69,6 +81,7 @@ CREATE TABLE numeric_types (
 INSERT INTO numeric_types VALUES (
   0,
   12345678012345678,
+  0.3333333333,
   12345.01982339, 
   12345.12345, 
   12348.01290156789,
@@ -78,6 +91,7 @@ INSERT INTO numeric_types VALUES (
 INSERT INTO numeric_types VALUES (
   12312345678,
   0,
+  0.12345647894464564655,
   1345.01982339, 
   1234665.12345, 
   12348.01290156789,
@@ -85,7 +99,7 @@ INSERT INTO numeric_types VALUES (
   1234987.120871234
 );
 
---SELECT * FROM numeric_types;
+SELECT * FROM numeric_types;
 
 DROP TABLE date_types;
 CREATE TABLE date_types (
@@ -114,6 +128,8 @@ SELECT * FROM date_types;
 
 
 --------------------------supported
+
+/*
 
 DROP TABLE string_types_supported;
 CREATE TABLE string_types_supported (
@@ -187,4 +203,6 @@ INSERT INTO date_types_supported VALUES (
   TO_TIMESTAMP_TZ('2018-04-30 10:00:05 -08:00', 'YYYY-MM-DD HH24:MI:SS TZH:TZM')
 );
 
-SELECT * FROM date_types_supported;
+SELECT * FROM date_types_supported; 
+
+*/

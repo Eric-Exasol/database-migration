@@ -3,19 +3,23 @@ create or replace table "TESTING_DATATYPES_SCHEMA"."BITSTRING_TYPES" ("A" varcha
 create or replace table "TESTING_DATATYPES_SCHEMA"."BYTEA" ("MY_BYTEA" varchar(2000000));
 create or replace table "TESTING_DATATYPES_SCHEMA"."CHARACTER_TYPES" ("MY_VARCHAR" varchar(2000000),"MY_CHAR" char(1),"MY_CHARACTER" char(3),"MY_TEXT" varchar(2000000));
 create or replace table "TESTING_DATATYPES_SCHEMA"."DATE_TYPES" ("MY_TIMESTAMP" TIMESTAMP,"MY_TIMESTAMPTZ" TIMESTAMP WITH LOCAL TIME ZONE,"MY_DATE" date,"MY_TIME" TIMESTAMP,"MY_TIMETZ" TIMESTAMP WITH LOCAL TIME ZONE,"MY_INTERVAL" varchar(1000));
+create or replace table "TESTING_DATATYPES_SCHEMA"."DECIMAL_TYPES" ("MY_DECIMAL" decimal (36,36),"MY_DECIMAL2" decimal (36,36),"MY_DECIMAL3" decimal (36,36),"MY_DECIMAL4" decimal(36, 10),"MY_DECIMAL5" decimal(15,10));
 create or replace table "TESTING_DATATYPES_SCHEMA"."GEOMETRIC_TYPES" ("MY_POINT" varchar(2000),"MY_LINE" varchar(2000000),"MY_LSEG" varchar(50000),"MY_BOX" varchar(1000),"MY_PATH" varchar(2000000),"MY_POLYGON" varchar(50000),"MY_CIRCLE" varchar(1000));
 create or replace table "TESTING_DATATYPES_SCHEMA"."MONEY" ("BALANCE" varchar(100),"BOOL" bool);
 create or replace table "TESTING_DATATYPES_SCHEMA"."NETWORKADDR_TYPES" ("MY_CIDR" varchar(100),"MY_INET" varchar(100),"MY_MACADDR" varchar(100));
-create or replace table "TESTING_DATATYPES_SCHEMA"."NUMERIC_TYPES" ("MY_SMALLINT" SMALLINT,"MY_INT" INTEGER,"MY_BIGINT" BIGINT,"MY_DECIMAL" DOUBLE,"MY_NUMERIC" DOUBLE,"MY_REAL" DOUBLE,"MY_DOUBLE" DOUBLE,"MY_SMALLSERIAL" SMALLINT,"MY_SERIAL" INTEGER,"MY_BIGSERIAL" BIGINT);
+create or replace table "TESTING_DATATYPES_SCHEMA"."NUMERIC_TYPES" ("MY_SMALLINT" SMALLINT,"MY_INT" INTEGER,"MY_BIGINT" BIGINT,"MY_DECIMAL" decimal(36, 30),"MY_NUMERIC" decimal(36, 30),"MY_REAL" DOUBLE,"MY_DOUBLE" DOUBLE,"MY_SMALLSERIAL" SMALLINT,"MY_SERIAL" INTEGER,"MY_BIGSERIAL" BIGINT);
+create or replace table "TESTING_DATATYPES_SCHEMA"."OTHER_TYPES" ("ITEM" varchar(100000),"DAYOFWEEK" varchar(100000));
 create or replace table "TESTING_DATATYPES_SCHEMA"."XMLJSON" ("MY_XML" varchar(2000000),"MY_JSON" varchar(2000000));
 import into "TESTING_DATATYPES_SCHEMA"."BITSTRING_TYPES" from jdbc at postgres_db statement 'select a::text,b::text from testing_datatypes_schema.bitstring_types';
 import into "TESTING_DATATYPES_SCHEMA"."BYTEA" from jdbc at postgres_db statement 'select my_bytea::text from testing_datatypes_schema.bytea';
 import into "TESTING_DATATYPES_SCHEMA"."CHARACTER_TYPES" from jdbc at postgres_db statement 'select my_varchar,my_char,my_character,my_text from testing_datatypes_schema.character_types';
 import into "TESTING_DATATYPES_SCHEMA"."DATE_TYPES" from jdbc at postgres_db statement 'select case when  my_timestamp > ''9999-12-31 23:59:59.999'' then ''9999-12-31 23:59:59.999'' when my_timestamp < ''0001-01-01'' then ''0001-01-01'' else my_timestamp end,case when  my_timestamptz > ''9999-12-31 23:59:59.999'' then ''9999-12-31 23:59:59.999'' when my_timestamptz < ''0001-01-01'' then ''0001-01-01'' else my_timestamptz end,my_date,my_time,my_timetz,my_interval::text from testing_datatypes_schema.date_types';
+import into "TESTING_DATATYPES_SCHEMA"."DECIMAL_TYPES" from jdbc at postgres_db statement 'select my_decimal,my_decimal2,my_decimal3,my_decimal4,my_decimal5 from testing_datatypes_schema.decimal_types';
 import into "TESTING_DATATYPES_SCHEMA"."GEOMETRIC_TYPES" from jdbc at postgres_db statement 'select my_point::text,my_line::text,my_lseg::text,my_box::text,my_path::text,my_polygon::text,my_circle::text from testing_datatypes_schema.geometric_types';
 import into "TESTING_DATATYPES_SCHEMA"."MONEY" from jdbc at postgres_db statement 'select balance::text,bool from testing_datatypes_schema.money';
 import into "TESTING_DATATYPES_SCHEMA"."NETWORKADDR_TYPES" from jdbc at postgres_db statement 'select my_cidr::text,my_inet::text,my_macaddr::text from testing_datatypes_schema.networkaddr_types';
 import into "TESTING_DATATYPES_SCHEMA"."NUMERIC_TYPES" from jdbc at postgres_db statement 'select my_smallint,my_int,my_bigint,my_decimal,my_numeric,my_real,my_double,my_smallserial,my_serial,my_bigserial from testing_datatypes_schema.numeric_types';
+import into "TESTING_DATATYPES_SCHEMA"."OTHER_TYPES" from jdbc at postgres_db statement 'select item::text,dayofweek::text from testing_datatypes_schema.other_types';
 import into "TESTING_DATATYPES_SCHEMA"."XMLJSON" from jdbc at postgres_db statement 'select my_xml::text,my_json::text from testing_datatypes_schema.xmljson';
 
-SELECT * FROM "TESTING_DATATYPES_SCHEMA"."XMLJSON";
+SELECT * FROM decimal_types;      

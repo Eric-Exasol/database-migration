@@ -1,0 +1,5 @@
+language: sql
+services:
+  - mysql
+before_install:
+  - mysql -u root --password="" < testing_files/mysql_datatypes_test.sql

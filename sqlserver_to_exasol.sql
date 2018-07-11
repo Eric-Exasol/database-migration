@@ -6,6 +6,7 @@ create schema database_migration;
      applied whenever needed. Feel free to adjust it. 
 */
 
+--/
 create or replace script database_migration.SQLSERVER_TO_EXASOL(
 CONNECTION_NAME 				-- name of the database connection inside exasol, e.g. sqlserver_db
 ,DB2SCHEMA 						-- if true then SQL Server: database.schema.table => EXASOL: database.schema_table; if false then SQLSERVER: schema.table => EXASOL: schema.table
@@ -116,18 +117,22 @@ with sqlserv_base as(
 			),
 	cr_schemas as ( -- if db=schema then select distinct db_name as schema_name else select distinct schema_name as schema_name
 		with all_schemas as (select distinct ]]..schema_column..[[ as schema_name from sqlserv_base )
-			select 'create schema "' || ]]..exa_upper_begin..[[ schema_name ]]..exa_upper_end..[[ ||'";' as cr_schema from all_schemas order by schema_name
+			select 'create schema if not exists "' || ]]..exa_upper_begin..[[ schema_name ]]..exa_upper_end..[[ ||'";' as cr_schema from all_schemas order by schema_name
 	),
 	cr_tables as ( -- if db=schema then db_name"."schema_name"_"table_name
-		select 'create table ]]..tbl_def..[[ ( ' 
+		select 'create or replace table ]]..tbl_def..[[ ( ' 
 				|| cols || '
 );' as tbls from (select ]]..tbl_group..[[, 
  			group_concat( 
  				case USER_TYPE_ID -- SQLSERVER datatype system type codes are in system table SYS.TYPES, 
  					--map with USER_TYPE_ID instead of SYSTEM_TYPE_ID ( not unique!!!)
- 					when 108 then '"' || column_name || '"' ||' ' || 'DECIMAL(' || PRECISION || ',' || SCALE || ')' --       numeric
- 					when 36 then  '"' || column_name || '"' ||' ' ||  'CHAR(36)'										-- uniqueidentifier 
- 					when 106 then '"' || column_name || '"' ||' ' ||  'DECIMAL(' || PRECISION || ',' || SCALE || ')'          --decimal
+ 					when 108 then '"' || column_name || '"' ||' ' || case when PRECISION > 36 then case when SCALE > 36 then 'DECIMAL(' || 36 || ',' || 36 || ')' else 'DECIMAL(' || 36 || ',' || SCALE || ')' end else 'DECIMAL(' || PRECISION || ',' || SCALE || ')' end   --numeric
+ 					-- Alternative when you have big values with a precision higher than 36 inside a column numeric(38) and want to store them
+ 					/* when 108 then '"' || column_name || '"' ||' ' || case when PRECISION > 36 then 'DOUBLE PRECISION' else 'DECIMAL(' || PRECISION || ',' || SCALE || ')' end --numeric */
+ 					when 36 then  '"' || column_name || '"' ||' ' ||  'CHAR(36)'	
+ 					when 106 then '"' || column_name || '"' ||' ' || case when PRECISION > 36 then case when SCALE > 36 then 'DECIMAL(' || 36 || ',' || 36 || ')' else 'DECIMAL(' || 36 || ',' || SCALE || ')' end else 'DECIMAL(' || PRECISION || ',' || SCALE || ')' end    --decimal									-- uniqueidentifier 
+ 					-- Alternative when you have big values with a precision higher than 36 inside a column decimal(38) and want to store them
+ 					/* when 106 then '"' || column_name || '"' ||' ' || case when PRECISION > 36 then 'DOUBLE PRECISION' else 'DECIMAL(' || PRECISION || ',' || SCALE || ')' end --decimal */
  					when 175  then '"' || column_name || '"' ||' ' ||'CHAR('||COL_MAX_LENGTH || ')'                     --char
  					when 62 then '"' || column_name || '"' ||' ' ||'DOUBLE'         				   --float
  					when 42 then '"' || column_name || '"' ||' ' ||'TIMESTAMP'     				  --datetime2
@@ -157,13 +162,13 @@ with sqlserv_base as(
  					when 189 then '"' || column_name || '"' ||' ' ||'TIMESTAMP'  -- timestamp
  					when 241 then '"' || column_name || '"' ||' ' ||'VARCHAR(2000000)' --xml
  					when 256 then '"' || column_name || '"' ||' ' ||'CHAR(128)' --sysname
- 					else '-- UNSUPPORTED DATATYPE IN COLUMN ' || column_name || '  MSSQL TYPE INFO: USER_TYPE_ID ' || USER_TYPE_ID || ', SYSTEM_TYPE_ID ' ||  SYSTEM_TYPE_ID || ', NAME ' || TYPE_NAME || ', PRECISION ' || PRECISION || ', SCALE ' || SCALE
+ 					-- else '-- UNSUPPORTED DATATYPE IN COLUMN ' || column_name || '  MSSQL TYPE INFO: USER_TYPE_ID ' || USER_TYPE_ID || ', SYSTEM_TYPE_ID ' ||  SYSTEM_TYPE_ID || ', NAME ' || TYPE_NAME || ', PRECISION ' || PRECISION || ', SCALE ' || SCALE
  				end
  				|| case when IS_IDENTITY='1' then ' IDENTITY' end
  				|| case when IS_NULLABLE='0' then ' NOT NULL' end
  				
  			order by COLUMN_ID SEPARATOR ', 
-' ) as cols 
+' ) as cols
  			from sqlserv_base group by ]]..tbl_group..[[ ) order by tbls
 	),
 	cr_import_stmts as (
@@ -200,7 +205,7 @@ with sqlserv_base as(
  					when 189 then '"' || column_name || '"'
  					when 241 then '"' || column_name || '"' 
  					when 256 then '"' || column_name || '"'
- 					else '-- UNSUPPORTED DATATYPE IN COLUMN ' || column_name || '  MSSQL TYPE INFO: USER_TYPE_ID ' || USER_TYPE_ID || ', SYSTEM_TYPE_ID ' ||  SYSTEM_TYPE_ID || ', NAME ' || TYPE_NAME || ', PRECISION ' || PRECISION || ', SCALE ' || SCALE
+ 					-- else '-- UNSUPPORTED DATATYPE IN COLUMN ' || column_name || '  MSSQL TYPE INFO: USER_TYPE_ID ' || USER_TYPE_ID || ', SYSTEM_TYPE_ID ' ||  SYSTEM_TYPE_ID || ', NAME ' || TYPE_NAME || ', PRECISION ' || PRECISION || ', SCALE ' || SCALE
  				end  order by column_id SEPARATOR ',
 ' ) || '
 ) 
@@ -226,7 +231,7 @@ from jdbc at ]]..CONNECTION_NAME..[[ statement
  					when 104 then '[' || column_name || ']' 
  					when 40  then '[' || column_name || ']' 
  					when 35  then '[' || column_name || ']' 
- 					when 43 then 'cast([' || column_name || '] as DateTime)' 
+ 					when 43 then 'CONVERT(datetime2, [' || column_name || '], 1)' --datetimeoffset 
  					when 58 then '[' || column_name || ']' 
  					when 59 then '[' || column_name || ']' 
  					when 60 then '[' || column_name || ']'
@@ -239,7 +244,7 @@ from jdbc at ]]..CONNECTION_NAME..[[ statement
  					when 189 then 'CAST([' || column_name || '] AS DATETIME)'
  					when 241 then '[' || column_name || ']' 
  					when 256 then '[' || column_name || ']'
- 					else '-- UNSUPPORTED DATATYPE IN COLUMN ' || column_name || '  MSSQL TYPE INFO: USER_TYPE_ID ' || USER_TYPE_ID || ', SYSTEM_TYPE_ID ' ||  SYSTEM_TYPE_ID || ', NAME ' || TYPE_NAME || ', PRECISION ' || PRECISION || ', SCALE ' || SCALE
+ 					-- else '-- UNSUPPORTED DATATYPE IN COLUMN ' || column_name || '  MSSQL TYPE INFO: USER_TYPE_ID ' || USER_TYPE_ID || ', SYSTEM_TYPE_ID ' ||  SYSTEM_TYPE_ID || ', NAME ' || TYPE_NAME || ', PRECISION ' || PRECISION || ', SCALE ' || SCALE
  				end  order by column_id SEPARATOR ',
 ') || '
 
@@ -262,16 +267,16 @@ return(res)
 
 -- Create a connection to the SQLServer database
 create or replace CONNECTION sqlserver_connection 
-	TO 'jdbc:jtds:sqlserver://192.168.1.42:1433'
-	USER 'user'
-	IDENTIFIED BY 'exasolRocks!';
+	TO 'jdbc:jtds:sqlserver://192.168.99.100:1433'
+	USER 'sa'
+	IDENTIFIED BY 'my_strong_Password';
 
 -- Finally start the import process
 execute script database_migration.SQLSERVER_TO_EXASOL(
     'sqlserver_connection', -- CONNECTION_NAME:             name of the database connection inside exasol -> e.g. sqlserver_db
     true,                   -- DB2SCHEMA:                   if true then SQL Server: database.schema.table => EXASOL: database.schema_table; if false then SQLSERVER: schema.table => EXASOL: schema.table
-    'AdventureWorks%',      -- DB_FILTER:                   filter for SQLSERVER db, e.g. 'master', 'ma%', 'first_db, second_db', '%'
-    '%',                    -- SCHEMA_FILTER:               filter for the schemas to generate and load e.g. 'my_schema', 'my%', 'schema1, schema2', '%'
+    'testing',      -- DB_FILTER:                   filter for SQLSERVER db, e.g. 'master', 'ma%', 'first_db, second_db', '%'
+    'dbo',                    -- SCHEMA_FILTER:               filter for the schemas to generate and load e.g. 'my_schema', 'my%', 'schema1, schema2', '%'
     '%',                    -- TABLE_FILTER:                filter for the tables to generate and load e.g. 'my_table', 'my%', 'table1, table2', '%'
     false                   -- IDENTIFIER_CASE_INSENSITIVE: set to TRUE if identifiers should be put uppercase
 );

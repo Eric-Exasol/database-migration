@@ -62,7 +62,10 @@ with vv_pg_columns as (
 	when "data_type" = 'macaddr' then 'varchar(100)'
 	when "data_type" = 'money' then 'varchar(100)' --maybe decimal instead?
 	when "data_type" = 'name' then 'varchar(1000)'
+	when "data_type" = 'numeric' then case when "numeric_precision" is null then 'DOUBLE' else case when "numeric_precision" > 36 and "numeric_scale" > 36 then 'decimal (36,36)' when "numeric_precision" > 36 and "numeric_scale" <= 36 then 'decimal(36, ' || "numeric_scale" || ')' else 'decimal(' || "numeric_precision" || ',' || "numeric_scale" || ')' end end
+	/* alternative to keep the values with a precision/scale > 36 as a double: 
 	when "data_type" = 'numeric' then case when "numeric_precision" is null or "numeric_precision" > 36 then 'DOUBLE' else 'decimal(' || "numeric_precision" || ',' || case when ("numeric_scale" > "numeric_precision") then "numeric_precision" else  case when "numeric_scale" < 0 then 0 else "numeric_scale" end end || ')' end
+	*/
 	when "data_type" = 'oid' then 'decimal(36)'
 	when "data_type" = 'path' then 'varchar(2000000)'
 	when "data_type" = 'pg_lsn' then 'varchar(2000000)'
