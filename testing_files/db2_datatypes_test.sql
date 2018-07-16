@@ -100,6 +100,19 @@ INSERT INTO xml_table VALUES
 
 SELECT * FROM xml_table;
 
+DROP TABLE xml_table2;
+CREATE TABLE xml_table2 (my_xml xml);
+INSERT INTO xml_table2 VALUES 
+(
+'<note>
+  <to>Tove</to>
+  <from>Jani</from>
+  <heading>Reminder</heading>
+  <body>Dont forget me this weekend!</body>
+</note>'
+);
+SELECT * FROM xml_table2;
+
 DROP TYPE TESTING.US_DOLLAR;
 CREATE DISTINCT TYPE TESTING.US_DOLLAR AS DECIMAL (9,2);
 DROP TYPE TESTING.CANADIAN_DOLLAR;

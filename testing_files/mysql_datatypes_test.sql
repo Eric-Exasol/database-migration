@@ -161,3 +161,70 @@ INSERT INTO test_json (my_json) VALUES (
 
 SELECT * FROM test_json;
 
+DROP TABLE IF EXISTS test_json2 CASCADE;
+CREATE TABLE test_json2 (id int, my_json JSON);
+INSERT INTO test_json2 (id, my_json) VALUES (1,
+        '{"menu": {
+          "id": "file",
+          "value": "File",
+          "popup": {
+            "menuitem": [
+              {"value": "New", "onclick": "CreateNewDoc()"},
+              {"value": "Open", "onclick": "OpenDoc()"},
+              {"value": "Close", "onclick": "CloseDoc()"}
+            ]
+          }
+        }}'
+);
+
+SELECT * FROM test_json2;
+
+DROP TABLE IF EXISTS test_json3 CASCADE;
+CREATE TABLE test_json3 (id int, my_json JSON, string varchar(20));
+INSERT INTO test_json3 (id, my_json, string) VALUES (1,
+        '{"menu": {
+          "id": "file",
+          "value": "File",
+          "popup": {
+            "menuitem": [
+              {"value": "New", "onclick": "CreateNewDoc()"},
+              {"value": "Open", "onclick": "OpenDoc()"},
+              {"value": "Close", "onclick": "CloseDoc()"}
+            ]
+          }
+        }}',
+        'hello!'
+);
+
+SELECT * FROM test_json3;
+
+DROP TABLE IF EXISTS test_json4 CASCADE;
+CREATE TABLE test_json4 (my_json JSON, another_json JSON, string varchar(20));
+INSERT INTO test_json4 (my_json, another_json, string) VALUES (
+        '{"menu": {
+          "id": "file",
+          "value": "File",
+          "popup": {
+            "menuitem": [
+              {"value": "New", "onclick": "CreateNewDoc()"},
+              {"value": "Open", "onclick": "OpenDoc()"},
+              {"value": "Close", "onclick": "CloseDoc()"}
+            ]
+          }
+        }}',
+                '{"menu": {
+          "id": "file",
+          "value": "File",
+          "popup": {
+            "menuitem": [
+              {"value": "New", "onclick": "CreateNewDoc()"},
+              {"value": "Open", "onclick": "OpenDoc()"},
+              {"value": "Close", "onclick": "CloseDoc()"}
+            ]
+          }
+        }}',
+        'hello!'
+);
+
+SELECT * FROM test_json4;
+
