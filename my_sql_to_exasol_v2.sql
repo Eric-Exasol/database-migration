@@ -4,6 +4,7 @@ create schema if not exists database_migration;
 	to load all needed data from a mysql database. Automatic datatype conversion is
 	applied whenever needed. Feel free to adjust it. 
 */
+DROP VIEW IF EXISTS database_migration.resView;
 
 --/
 create or replace script database_migration.MYSQL_TO_EXASOL2(
@@ -23,7 +24,7 @@ if IDENTIFIER_CASE_INSENSITIVE == true then
 end
 
 suc, res = pquery([[
-
+CREATE VIEW database_migration.resView AS
 with vv_mysql_columns as (
 	select ]]..exa_upper_begin..[[table_catalog]]..exa_upper_end..[[ as "exa_table_catalog", ]]..exa_upper_begin..[[table_schema]]..exa_upper_end..[[ as "exa_table_schema", ]]..exa_upper_begin..[[table_name]]..exa_upper_end..[[ as "exa_table_name", ]]..exa_upper_begin..[[column_name]]..exa_upper_end..[[ as "exa_column_name", mysql.* from  
 		(import from jdbc at ]]..CONNECTION_NAME..[[ statement 
@@ -172,21 +173,20 @@ select 5, cast('-- ### IMPORTS ###' as varchar(2000000)) SQL_TEXT
 union all
 select 6, c.* from vv_imports c
 WHERE c.SQL_TEXT NOT LIKE '%select  from%' 
-) order by ord
+) order by ord 
 ]],{})
 
 if not suc then
   error('"'..res.error_message..'" Caught while executing: "'..res.statement_text..'"')
 end
 
-return(res)
+--return(res)
 
 /
 
 
-
 create or replace connection mysql_conn 
-to 'jdbc:mysql://192.168.99.102:3306'
+to 'jdbc:mysql://192.168.99.100:3306'
 user 'root'
 identified by 'mysql';
 
@@ -195,6 +195,9 @@ execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn' --name of your d
 ,'testing_d%' -- schema filter --> '%' to load all schemas except 'information_schema' and 'mysql' and 'performance_schema' / '%publ%' to load all schemas like '%pub%'
 ,'%' -- table filter --> '%' to load all tables (
 );
+
+
+export (SELECT * FROM database_migration.resView) into local csv file 'C:\Users\erll\Documents\Git\forked\database-migration\testing_files\output.sql' DELIMIT = NEVER;
 
 /* 
 execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn',TRUE,'testing_d%','%' );

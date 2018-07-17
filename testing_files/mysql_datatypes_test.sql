@@ -5,9 +5,9 @@ USE testing_datatypes_schema;
 DROP TABLE IF EXISTS numeric_types CASCADE;
 CREATE TABLE numeric_types (
         my_tinyint      tinyint NOT NULL,
-        my_smallint     smallint UNSIGNED,
+        my_smallint     smallint,
         my_mediumint    mediumint,
-        my_int          int(4) UNSIGNED ZEROFILL,
+        my_int          int(4),
         my_bigint       bigint,
         my_decimal      decimal(65,30),
         my_float        float(30,20),
@@ -16,9 +16,9 @@ CREATE TABLE numeric_types (
 
 INSERT INTO numeric_types (my_tinyint, my_smallint, my_mediumint, my_int, my_bigint, my_decimal, my_float, my_double) VALUES (
         '-128',
-        '64000',
+        '32000',
         '-8388608',
-        '4294967295',  
+        '94967295',  
         '42949672954295',
         '123123123123123123123.12312312312312',
         '1299.9999993',
