@@ -38,7 +38,7 @@ docker exec -ti mysqldb sh -c "mysql < tmp/mysql_datatypes_test.sql -pmysql"
 #copy .sql file to be executed inside container
 docker cp testing_files/playground.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/ &&
 #execute the file inside the exasoldb container
-docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "localhost:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/playground.sql""
+docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8899" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/playground.sql""
 
 MY_MESSAGE="Done!"
 echo $MY_MESSAGE
