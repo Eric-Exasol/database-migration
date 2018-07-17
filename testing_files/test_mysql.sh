@@ -13,12 +13,12 @@ echo $MY_MESSAGE
 
 #setting up a mysql db image in docker
 docker pull mysql:5.7.22
-docker run --name mysqldb -p 3360:3360 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=mysql -d mysql:5.7.22
+docker run --name mysqldb -p 3360:3360 -e MYSQL_ROOT_PASSWORD=mysql -d mysql:5.7.22
+docker logs -f mysqldb
 
 #setting up an exasol db image in docker
 docker pull exasol/docker-db:latest
 docker run --name exasoldb -p 8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
-
 docker logs -f exasoldb &
 
 # Wait until database is ready
