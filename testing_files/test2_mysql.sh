@@ -29,11 +29,6 @@ docker cp testing_files/mysql_datatypes_test.sql mysqldb:/tmp/
 #execute the file inside the mysqldb container
 docker exec -ti mysqldb sh -c "mysql < tmp/mysql_datatypes_test.sql -pmysql"
 
-
-#access the mysqldb container from the exasoldb container
-# TODO get the connection string of the mysql container
-# TODO get the connection string of the exasoldb container
-
 #copy .sql file to be executed inside container
 docker cp mysql_to_exasol_v2.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/ &&
 #execute the file inside the exasoldb container
