@@ -2,6 +2,8 @@
 MY_MESSAGE="Test message!"
 echo $MY_MESSAGE
 
+set -e
+
 #function cleanup() {
 #	docker stop exasoldb || true
 #   docker rm -v exasoldb || true
