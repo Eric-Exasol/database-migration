@@ -186,7 +186,7 @@ end
 
 
 create or replace connection mysql_conn 
-to 'jdbc:mysql://192.168.99.100:3306'
+to 'jdbc:mysql://127.0.0.1:3360'
 user 'root'
 identified by 'mysql';
 
@@ -197,7 +197,7 @@ execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn' --name of your d
 );
 
 
-export (SELECT * FROM database_migration.resView) into local csv file 'C:\Users\erll\Documents\Git\forked\database-migration\testing_files\output.sql' DELIMIT = NEVER;
+export (SELECT * FROM database_migration.resView) into local csv file 'output.sql' DELIMIT = NEVER;
 
 /* 
 execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn',TRUE,'testing_d%','%' );

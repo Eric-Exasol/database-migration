@@ -6,6 +6,6 @@ services:
   - docker
   
 before_install:
-  - chmod +x testing_files/test_mysql.sh
+  - chmod +x testing_files/test2_mysql.sh
 
-script: ./testing_files/test_mysql.sh
+script: ./testing_files/test2_mysql.sh
