@@ -185,10 +185,6 @@ end
 /
 
 
-create or replace connection mysql_conn 
-to 'jdbc:mysql://mysqldb:3360'
-user 'root'
-identified by 'mysql';
 
 execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn' --name of your database connection
 ,TRUE -- case sensitivity handling for identifiers -> false: handle them case sensitiv / true: handle them case insensitiv --> recommended: true
