@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 MY_MESSAGE="Test message!"
 echo $MY_MESSAGE
 
