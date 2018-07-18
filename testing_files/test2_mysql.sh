@@ -30,9 +30,9 @@ docker cp testing_files/mysql_datatypes_test.sql mysqldb:/tmp/
 docker exec -ti mysqldb sh -c "mysql < tmp/mysql_datatypes_test.sql -pmysql"
 
 #copy .sql file to be executed inside container
-docker cp mysql_to_exasol_v2.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/ &&
+docker cp my_sql_to_exasol_v2.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/ &&
 #execute the file inside the exasoldb container
-docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/mysql_to_exasol_v2.sql" -x" &&
+docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/my_sql_to_exasol_v2.sql" -x" &&
 #execute the output.sql file created inside the exasoldb container
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
 
