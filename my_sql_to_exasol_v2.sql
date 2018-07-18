@@ -186,7 +186,7 @@ end
 
 
 create or replace connection mysql_conn 
-to 'jdbc:mysql://127.0.0.1:3360'
+to 'jdbc:mysql://192.168.99.100:3306'
 user 'root'
 identified by 'mysql';
 
@@ -203,7 +203,6 @@ export (SELECT * FROM database_migration.resView) into local csv file 'output.sq
 execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn',TRUE,'testing_d%','%' );
 
 
-create connection exasol_conn to '192.168.99.101:8563' user 'sys' identified by 'exasol';
 
 CREATE OR REPLACE TABLE res (sql_text varchar(200000));
 import into res from JDBC at exasol_conn statement 'execute script database_migration.MYSQL_TO_EXASOL2(''mysql_conn'',TRUE,''testing_d%'',''%'')';
