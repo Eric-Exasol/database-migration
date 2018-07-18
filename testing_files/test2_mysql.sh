@@ -2,7 +2,7 @@
 MY_MESSAGE="Test message!"
 echo $MY_MESSAGE
 
-set -eux
+set -e
 
 #function cleanup() {
 #	docker stop exasoldb || true
@@ -16,6 +16,12 @@ set -eux
 #setting up a mysql db image in docker
 docker pull mysql:5.7.22
 docker run --name mysqldb -p 3360:3360 -e MYSQL_ROOT_PASSWORD=mysql -d mysql:5.7.22
+
+#add bind address to mysqld.cnf conf file
+docker cp mysqldb:/etc/mysql/mysql.conf.d/mysqld.cnf .
+echo 'bind-address= 127.0.0.1' >> mysqld.cnf
+docker cp mysqld.cnf mysqldb:/etc/mysql/mysql.conf.d/mysqld.cnf
+
 
 #setting up an exasol db image in docker
 docker pull exasol/docker-db:latest
@@ -37,9 +43,3 @@ docker cp my_sql_to_exasol_v2.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.1
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/my_sql_to_exasol_v2.sql" -x" &&
 #execute the output.sql file created inside the exasoldb container
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
-
-
-
-
-MY_MESSAGE="Done!"
-echo $MY_MESSAGE

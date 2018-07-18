@@ -186,7 +186,7 @@ end
 
 
 create or replace connection mysql_conn 
-to 'jdbc:mysql://192.168.99.100:3306'
+to 'jdbc:mysql://127.0.0.1:3360'
 user 'root'
 identified by 'mysql';
 
