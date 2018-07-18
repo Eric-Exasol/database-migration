@@ -12,10 +12,11 @@ set -e
 #   docker rm -v mysqldb || true
 #}
 #trap cleanup EXIT
+docker network create test-network 
 
 #setting up a mysql db image in docker
 docker pull mysql:5.7.22
-docker run --name mysqldb -p 3360:3360 -e MYSQL_ROOT_PASSWORD=mysql -d mysql:5.7.22
+docker run --name mysqldb --network test-network -p 3360:3360 -e MYSQL_ROOT_PASSWORD=mysql -d mysql:5.7.22
 
 #add bind address to mysqld.cnf conf file
 docker cp mysqldb:/etc/mysql/mysql.conf.d/mysqld.cnf .
@@ -25,7 +26,7 @@ docker cp mysqld.cnf mysqldb:/etc/mysql/mysql.conf.d/mysqld.cnf
 
 #setting up an exasol db image in docker
 docker pull exasol/docker-db:latest
-docker run --name exasoldb -p 8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
+docker run --name exasoldb --network test-network -p 8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
 docker logs -f exasoldb &
 
 # Wait until database is ready
