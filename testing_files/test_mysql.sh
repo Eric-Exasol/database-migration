@@ -4,21 +4,9 @@ echo $MY_MESSAGE
 
 set -e
 
-#function cleanup() {
-#	docker stop exasoldb || true
-#   docker rm -v exasoldb || true
-#	
-#	docker stop mysqldb || true
-#   docker rm -v mysqldb || true
-#}
-#trap cleanup EXIT
-
 #setting up a mysql db image in docker
 docker pull mysql:5.7.22
 docker run --name mysqldb -p 3360:3306 -e MYSQL_ROOT_PASSWORD=mysql -d mysql:5.7.22
-
-docker inspect mysqldb | grep "IPAddress"
-
 
 #setting up an exasol db image in docker
 docker pull exasol/docker-db:latest
@@ -35,6 +23,7 @@ docker cp testing_files/mysql_datatypes_test.sql mysqldb:/tmp/
 docker exec -ti mysqldb sh -c "mysql < tmp/mysql_datatypes_test.sql -pmysql"
 
 #find the ip address of the mysql container
+docker inspect mysqldb | grep "IPAddress"
 ip_addr_long="$(docker inspect mysqldb | grep "IPAddress")"
 len=${#ip_addr_long}
 start=$(expr $len - 12)
@@ -47,7 +36,6 @@ docker cp testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution
 #execute the file inside the exasoldb container
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/create_conn.sql" -x"
 	
-
 #copy .sql file to be executed inside container
 docker cp my_sql_to_exasol_v2.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/ &&
 #execute the file inside the exasoldb container

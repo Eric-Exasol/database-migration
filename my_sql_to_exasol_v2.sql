@@ -4,7 +4,6 @@ create schema if not exists database_migration;
 	to load all needed data from a mysql database. Automatic datatype conversion is
 	applied whenever needed. Feel free to adjust it. 
 */
-DROP VIEW IF EXISTS database_migration.resView;
 
 --/
 create or replace script database_migration.MYSQL_TO_EXASOL2(
@@ -22,6 +21,8 @@ if IDENTIFIER_CASE_INSENSITIVE == true then
 	exa_upper_begin='upper('
 	exa_upper_end=')'
 end
+
+dropView = query([[DROP VIEW IF EXISTS database_migration.resView]])
 
 suc, res = pquery([[
 CREATE VIEW database_migration.resView AS
@@ -184,7 +185,12 @@ end
 
 /
 
-
+/* -- to test locally
+create or replace connection mysql_conn 
+to 'jdbc:mysql://192.168.99.100:3360'
+user 'root'
+identified by 'mysql';
+*/
 
 execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn' --name of your database connection
 ,TRUE -- case sensitivity handling for identifiers -> false: handle them case sensitiv / true: handle them case insensitiv --> recommended: true
@@ -192,15 +198,8 @@ execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn' --name of your d
 ,'%' -- table filter --> '%' to load all tables (
 );
 
-
+/* -- to test locally
+SELECT * FROM database_migration.resView
+*/
 export (SELECT * FROM database_migration.resView) into local csv file 'output.sql' DELIMIT = NEVER;
 
-/* 
-execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn',TRUE,'testing_d%','%' );
-
-
-
-CREATE OR REPLACE TABLE res (sql_text varchar(200000));
-import into res from JDBC at exasol_conn statement 'execute script database_migration.MYSQL_TO_EXASOL2(''mysql_conn'',TRUE,''testing_d%'',''%'')';
-export (import into (res) from JDBC at mysql_conn statement 'execute script database_migration.MYSQL_TO_EXASOL2(''mysql_conn'',TRUE,''testing_d%'',''%'' );' ) into local csv file 'test.csv'; 
-*/
