@@ -24,13 +24,19 @@ docker cp testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution
 #execute the file inside the exasoldb container
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/create_conn.sql" -x"
 
-#delete output.sql file if exists : 
-file="output.sql"
-docker exec -ti exasoldb sh -c "[ ! -e $file ] || rm $file"
 
-#copy .sql file to be executed inside container
-docker cp sqlserver_to_exasol_v2.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/ &&
-#execute the file inside the exasoldb container
-docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/sqlserver_to_exasol_v2.sql" -x" &&
+#create the script that we want to execute
+PYTHONPATH=$HOME/exa_py/lib/python2.7/site-packages python create_script.py "sqlserver_to_exasol_v2.sql"
+#this python script executes the export script created by the sqlserver_to_exasol_v2.sql script and creates an output.sql file with the result
+PYTHONPATH=$HOME/exa_py/lib/python2.7/site-packages python export_res.py "SQLSERVER_TO_EXASOL" "sqlserver_connection" "testing" "dbo" "%" false
+
+ 
+file="output.sql"
+#delete previous output.sql file if exists inside container:
+docker exec -ti exasoldb sh -c "[ ! -e $file ] || rm $file"
+#copy new output.sql file to be executed inside container
+docker cp $file exasoldb:/
 #execute the output.sql file created inside the exasoldb container
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
+#delete the file from current directory
+[ ! -e $file ] || rm $file
