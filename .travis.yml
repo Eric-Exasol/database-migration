@@ -34,12 +34,12 @@ before_install:
     # move write odbc inis to home
     - ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
 
-    - chmod +x testing_files/main_test.sh
+    - chmod +x testing_files/exasol_docker.sh
     - chmod +x testing_files/mock_test.sh
     - chmod +x testing_files/test_mysql.sh
     
     #install exasol image and run container
-    - ./testing_files/main_test.sh
+    - ./testing_files/exasol_docker.sh
     
     # get unixODBC
     - wget www.unixodbc.org/unixODBC-2.3.4.tar.gz
