@@ -26,11 +26,11 @@ docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Conso
 
 
 
-python_path="C:\Users\erll\AppData\Local\Continuum\anaconda2\python.exe"
+
 #create the script that we want to execute
-$python_path create_script.py "my_sql_to_exasol_v2.sql"
+PYTHONPATH=$HOME/exa_py/lib/python2.7/site-packages python create_script.py "my_sql_to_exasol_v2.sql"
 #this python script executes the export script created by the my_sql_to_exasol_v2.sql script and creates an output.sql file with the result
-$python_path export_res.py "MYSQL_TO_EXASOL2" "mysql_conn" "testing_d%" "%"
+PYTHONPATH=$HOME/exa_py/lib/python2.7/site-packages python export_res.py "MYSQL_TO_EXASOL2" "mysql_conn" "testing_d%" "%"
 
 #delete previous output.sql file if exists : 
 file="output.sql"
