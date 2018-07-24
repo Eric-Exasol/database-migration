@@ -5,7 +5,50 @@ sudo: required
 services:
   - docker
   
-before_install:
-  - chmod +x testing_files/test_mysql.sh
+addons:
+  apt:
+    packages:
+      - unixodbc-dev
+      
+env:
+  global:
+    - EXAODBC=EXASOL_ODBC-6.0.2
+    - EXAODBC_URL=https://www.exasol.com/support/secure/attachment/52896/
+    - ODBCINI=$HOME/odbc.ini
+    - ODBCSYSINI=$HOME
+    - EXAHOST="127.0.0.1:8899"
+    - EXAUSER="sys"
+    - EXAPW="exasol"
+    - ODBC_HOST="127.0.0.1:8899"
+    #https://www.exasol.com/support/secure/attachment/52896/EXASOL_ODBC-6.0.2.tar.gz
 
-script: ./testing_files/test_mysql.sh
+before_install:
+    #setting up an exasol db image in docker
+    - docker pull exasol/docker-db:latest
+    #running a exasol container
+    - docker run --name exasoldb -p 8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
+    - docker logs -f exasoldb &
+
+    # Wait until database is ready
+    - (docker logs -f --tail 0 exasoldb &) 2>&1 | grep -q -i 'stage4: All stages finished'
+    - sleep 30
+    - chmod +x testing_files/mock_test.sh
+
+install:
+    - pip install pyodbc
+    - pip install pandas
+    
+    # install unixodbc
+    - tar -xzf unixODBC-2.3.4.tar.gz
+    - ./unixODBC-2.3.4/configure --prefix=$HOME/unixodbc
+    - make
+    - make install
+
+    # install EXAODBC
+    - tar -xzf $EXAODBC".tar.gz"
+    - ./$EXAODBC/config_odbc --mode=config --host=$EXAHOST --user=$EXAUSER --password=$EXAPW
+    
+    # install py sdk
+    - python setup.py install --prefix=$HOME/exa_py
+    
+script: ./testing_files/mock_test.sh
