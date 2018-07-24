@@ -12,7 +12,7 @@ docker logs -f exasoldb &
 
 # Wait until database is ready
 (docker logs -f --tail 0 exasoldb &) 2>&1 | grep -q -i 'stage4: All stages finished'
-sleep 30
+sleep 60
 
 exa_ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' exasoldb)"
 docker cp generate_script.sql exasoldb:/
