@@ -1,4 +1,6 @@
 import exasol as E
-C = E.connect(dsn='test_dsn')
+import os
+
+C = E.connect(Driver = 'EXAODBC', EXAHOST = os.environ['ODBC_HOST'], EXAUID = 'sys', EXAPWD = 'exasol')
 R = C.readData("SELECT 'connection works' FROM dual")
 print(R)
