@@ -33,6 +33,12 @@ before_install:
     - (docker logs -f --tail 0 exasoldb &) 2>&1 | grep -q -i 'stage4: All stages finished'
     - sleep 30
     - chmod +x testing_files/mock_test.sh
+    
+    # get unixODBC
+    - wget www.unixodbc.org/unixODBC-2.3.4.tar.gz
+    
+    # get EXAODBC    
+    - wget $EXAODBC_URL$EXAODBC".tar.gz"
 
 install:
     - pip install pyodbc
