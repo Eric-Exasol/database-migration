@@ -30,6 +30,9 @@ before_install:
     #cloning the python-exasol package repository
     - git clone --depth=50 --branch=master https://github.com/EXASOL/python-exasol.git
     - cp -R python-exasol/* .
+    
+    # move write odbc inis to home
+    - ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
 
     #setting up an exasol db image in docker
     - docker pull exasol/docker-db:latest
