@@ -37,6 +37,8 @@ before_install:
     - chmod +x testing_files/exasol_docker.sh
     - chmod +x testing_files/mock_test.sh
     - chmod +x testing_files/test_mysql.sh
+    - chmod +x testing_files/test_sqlserver.sh
+    - chmod +x testing_files/test_postgres.sh
     
     #install exasol image and run container
     - ./testing_files/exasol_docker.sh
