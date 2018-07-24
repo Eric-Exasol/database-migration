@@ -22,10 +22,7 @@ if IDENTIFIER_CASE_INSENSITIVE == true then
 	exa_upper_end=')'
 end
 
-dropView = query([[DROP VIEW IF EXISTS database_migration.resView]])
-
 suc, res = pquery([[
-CREATE VIEW database_migration.resView AS
 with vv_mysql_columns as (
 	select ]]..exa_upper_begin..[[table_catalog]]..exa_upper_end..[[ as "exa_table_catalog", ]]..exa_upper_begin..[[table_schema]]..exa_upper_end..[[ as "exa_table_schema", ]]..exa_upper_begin..[[table_name]]..exa_upper_end..[[ as "exa_table_name", ]]..exa_upper_begin..[[column_name]]..exa_upper_end..[[ as "exa_column_name", mysql.* from  
 		(import from jdbc at ]]..CONNECTION_NAME..[[ statement 
@@ -181,16 +178,16 @@ if not suc then
   error('"'..res.error_message..'" Caught while executing: "'..res.statement_text..'"')
 end
 
---return(res)
+return(res)
 
 /
 
-/* -- to test locally
+ -- to test locally
 create or replace connection mysql_conn 
 to 'jdbc:mysql://192.168.99.100:3360'
 user 'root'
 identified by 'mysql';
-*/
+
 
 execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn' --name of your database connection
 ,TRUE -- case sensitivity handling for identifiers -> false: handle them case sensitiv / true: handle them case insensitiv --> recommended: true
@@ -201,5 +198,23 @@ execute script database_migration.MYSQL_TO_EXASOL2('mysql_conn' --name of your d
 /* -- to test locally
 SELECT * FROM database_migration.resView
 */
-export (SELECT * FROM database_migration.resView) into local csv file 'output.sql' DELIMIT = NEVER;
+/*
+create or replace table "DATABASE_MIGRATION"."TEST" (sql_text varchar(200000));
+import into "DATABASE_MIGRATION"."TEST" from jdbc at 'jdbc:exa:localhost:8888' user 'sys' identified by 'exasol' statement 'execute script database_migration.MYSQL_TO_EXASOL2(''mysql_conn'',TRUE, ''testing_d%'', ''%'')';
 
+INSERT INTO "DATABASE_MIGRATION"."TEST" VALUES ('test'),('test2');
+--export () into local csv file 'C:\Users\erll\Documents\Git\forked\database-migration\testing_files\output.sql' DELIMIT = NEVER;
+--export (SELECT * FROM database_migration.resView) into local csv file 'output.sql' DELIMIT = NEVER;
+--/
+create or replace script database_migration.test_script(
+) RETURNS TABLE
+AS 
+suc, res = pquery([[ SELECT * FROM "DATABASE_MIGRATION"."TEST"]])
+return(res)
+/
+execute script database_migration.test_script();
+
+import from jdbc at 'jdbc:exa:127.0.0.1:8888' user 'sys' identified by 'exasol' statement 'execute script database_migration.test_script()';
+
+--select * from exa_commandline where param_name like '%ores%';
+*/

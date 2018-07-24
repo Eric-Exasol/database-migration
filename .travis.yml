@@ -34,15 +34,12 @@ before_install:
     # move write odbc inis to home
     - ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
 
-    #setting up an exasol db image in docker
-    - docker pull exasol/docker-db:latest
-    #running a exasol container
-    - docker run --name exasoldb -p 127.0.0.1:8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
-    - docker logs -f exasoldb &
-
-    # Wait until database is ready
-    - sleep 60
+    - chmod +x testing_files/main_test.sh
     - chmod +x testing_files/mock_test.sh
+    - chmod +x testing_files/test_mysql.sh
+    
+    #install exasol image and run container
+    - ./testing_files/main_test.sh
     
     # get unixODBC
     - wget www.unixodbc.org/unixODBC-2.3.4.tar.gz
@@ -67,4 +64,6 @@ install:
     # install py sdk
     - python setup.py install --prefix=$HOME/exa_py
     
-script: ./testing_files/mock_test.sh
+script: 
+    - ./testing_files/mock_test.sh
+    - ./testing_files/test_mysql.sh
