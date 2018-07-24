@@ -19,10 +19,10 @@ env:
     - EXAODBC_URL=https://www.exasol.com/support/secure/attachment/52896/
     - ODBCINI=$HOME/odbc.ini
     - ODBCSYSINI=$HOME
-    - EXAHOST="127.0.0.1:8888"
+    - EXAHOST="127.0.0.1:8899"
     - EXAUSER="sys"
     - EXAPW="exasol"
-    - ODBC_HOST="127.0.0.1:8888"
+    - ODBC_HOST="127.0.0.1:8899"
     #https://www.exasol.com/support/secure/attachment/52896/EXASOL_ODBC-6.0.2.tar.gz
 
 before_install:
@@ -37,7 +37,7 @@ before_install:
     #setting up an exasol db image in docker
     - docker pull exasol/docker-db:latest
     #running a exasol container
-    - docker run --name exasoldb -p 8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
+    - docker run --name exasoldb -p 127.0.0.1:8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
     - docker logs -f exasoldb &
 
     # Wait until database is ready
