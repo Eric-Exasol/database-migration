@@ -26,6 +26,10 @@ env:
     #https://www.exasol.com/support/secure/attachment/52896/EXASOL_ODBC-6.0.2.tar.gz
 
 before_install:
+    
+    #cloning the python-exasol package repository
+    git clone --depth=50 --branch=master https://github.com/EXASOL/python-exasol.git
+
     #setting up an exasol db image in docker
     - docker pull exasol/docker-db:latest
     #running a exasol container
@@ -57,6 +61,6 @@ install:
     - ./$EXAODBC/config_odbc --mode=config --host=$EXAHOST --user=$EXAUSER --password=$EXAPW
     
     # install py sdk
-    - python setup.py install --prefix=$HOME/exa_py
+    - python python-exasol/setup.py install --prefix=$HOME/exa_py
     
 script: ./testing_files/mock_test.sh
