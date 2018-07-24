@@ -1,4 +1,5 @@
 import sys
+import os
 import exasol as exa
 
 filename = sys.argv[1]
