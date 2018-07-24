@@ -1,3 +1,4 @@
+DROP SCHEMA IF EXISTS testing_datatypes_schema CASCADE;
 CREATE SCHEMA testing_datatypes_schema;
 SET search_path = testing_datatypes_schema;
 
