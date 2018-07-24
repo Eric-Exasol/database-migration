@@ -67,3 +67,5 @@ install:
 script: 
     - ./testing_files/mock_test.sh
     - ./testing_files/test_mysql.sh
+    - ./testing_files/test_sqlserver.sh
+    -./testing_files/test_postgres.sh

@@ -1,5 +1,7 @@
 CREATE DATABASE testing;
-USE [testing];
+GO
+USE testing;
+GO
 
 DROP TABLE IF EXISTS exact_numerics;
 CREATE TABLE exact_numerics (

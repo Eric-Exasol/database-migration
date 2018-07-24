@@ -21,10 +21,8 @@ if IDENTIFIER_CASE_INSENSITIVE == true then
 	exa_upper_end=')'
 end
 
-dropView = query([[DROP VIEW IF EXISTS database_migration.resView]])
 
 res = query([[
-CREATE VIEW database_migration.resView AS
 with vv_pg_columns as (
 	select ]]..exa_upper_begin..[["table_catalog"]]..exa_upper_end..[[ as "exa_table_catalog", ]]..exa_upper_begin..[["table_schema"]]..exa_upper_end..[[ as "exa_table_schema", ]]..exa_upper_begin..[["table_name"]]..exa_upper_end..[[ as "exa_table_name", ]]..exa_upper_begin..[["column_name"]]..exa_upper_end..[[ as "exa_column_name", pg.* from  
 		(import from jdbc at ]]..CONNECTION_NAME..[[ statement 
@@ -149,15 +147,15 @@ WHERE c.SQL_TEXT NOT LIKE '%select  from%'
 ) order by ord
 ]],{})
 
---return(res)
+return(res)
 /
 
-/* -- Create a connection to the Postgres database
+ -- Create a connection to the Postgres database
 create or replace connection postgres_db
 to 'jdbc:postgresql://192.168.99.100:5432/postgres'
 user 'postgres'
 identified by 'postgres';
-*/
+
 
 -- Finally start the import process
 execute script database_migration.POSTGRES_TO_EXASOL(
