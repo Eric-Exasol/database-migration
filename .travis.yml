@@ -19,10 +19,10 @@ env:
     - EXAODBC_URL=https://www.exasol.com/support/secure/attachment/52896/
     - ODBCINI=$HOME/odbc.ini
     - ODBCSYSINI=$HOME
-    - EXAHOST="127.0.0.1:8899"
+    - EXAHOST="127.0.0.1:8888"
     - EXAUSER="sys"
     - EXAPW="exasol"
-    - ODBC_HOST="127.0.0.1:8899"
+    - ODBC_HOST="127.0.0.1:8888"
     #https://www.exasol.com/support/secure/attachment/52896/EXASOL_ODBC-6.0.2.tar.gz
 
 before_install:
