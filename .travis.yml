@@ -30,8 +30,7 @@ before_install:
     - docker logs -f exasoldb &
 
     # Wait until database is ready
-    - (docker logs -f --tail 0 exasoldb &) 2>&1 | grep -q -i "stage4: All stages finished"
-    - sleep 30
+    - sleep 60
     - chmod +x testing_files/mock_test.sh
     
     # get unixODBC
