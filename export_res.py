@@ -13,7 +13,7 @@ if scriptname == "SQLSERVER_TO_EXASOL":
 	schemaFilter = sys.argv[4]
 	tableFilter = sys.argv[5]
 	caseSensitive = sys.argv[6]
-	query = "execute script database_migration." + scriptname + "('" + conn + "', TRUE, '" + dbFilter + "', '" + schemaFilter + "', '" + tableFilter + "', '" + caseSensitive + ")"
+	query = "execute script database_migration." + scriptname + "('" + conn + "', TRUE, '" + dbFilter + "', '" + schemaFilter + "', '" + tableFilter + "', " + caseSensitive + ")"
 
 else:
 	conn = sys.argv[2]

@@ -6,7 +6,7 @@ set -e
 
 #setting up a postgres db image in docker and running a container
 docker pull postgres:latest
-docker run --name postgresdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+docker run --name postgresdb -p 5423:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 #wait until the postgresdb container if fully initialized
 (docker logs -f --tail 0 postgresdb &) 2>&1 | grep -q -i 'database system is ready to accept connections'
 
