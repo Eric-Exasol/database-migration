@@ -9,6 +9,7 @@ docker pull postgres:latest
 docker run --name postgresdb -p 5423:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 #wait until the postgresdb container if fully initialized
 (docker logs -f --tail 0 postgresdb &) 2>&1 | grep -q -i 'database system is ready to accept connections'
+sleep 20
 
 #copy .sql file to be executed inside container
 docker cp testing_files/postgres_datatypes_test.sql postgresdb:/tmp/

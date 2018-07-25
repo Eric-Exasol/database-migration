@@ -1,5 +1,5 @@
 #!/bin/bash
-MY_MESSAGE="Starting main test!"
+MY_MESSAGE="Starting exasol docker!"
 echo $MY_MESSAGE
 
 set -e
