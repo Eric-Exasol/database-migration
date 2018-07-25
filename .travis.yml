@@ -34,6 +34,7 @@ before_install:
     # move write odbc inis to home
     - ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
 
+    # allow test files to be executed
     - chmod +x testing_files/exasol_docker.sh
     - chmod +x testing_files/mock_test.sh
     - chmod +x testing_files/test_mysql.sh

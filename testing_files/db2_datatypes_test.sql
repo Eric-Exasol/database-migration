@@ -1,7 +1,7 @@
-CREATE SCHEMA TESTING;
-SET SCHEMA TESTING; 
+CONNECT TO SAMPLE;
+CREATE SCHEMA TESTING3;
+SET SCHEMA TESTING3; 
 
-DROP TABLE numerics;
 CREATE TABLE numerics (
         my_bigint       bigint,
         my_int          integer,
@@ -17,7 +17,6 @@ CREATE TABLE numerics (
 INSERT INTO numerics VALUES (-9223372036854775807, 2147483647, -32768, '0.000000012', '0.000000012', '0.000000012', '123456789.12', 0, '0.000000012');
 SELECT * FROM numerics;
 
-DROP TABLE character_strings;
 CREATE TABLE character_strings (
         my_char       character(15),
         my_varchar    varchar(200),
@@ -38,7 +37,6 @@ INSERT INTO character_strings VALUES (
 );
 SELECT * FROM character_strings;
 
-DROP TABLE  date_types;
 CREATE TABLE date_types (
         my_date         date,
         my_time         time,
@@ -52,7 +50,7 @@ INSERT INTO date_types VALUES (
 );
 SELECT * FROM date_types;
 
-DROP TABLE xml_table;
+
 CREATE TABLE xml_table (
         my_id           varchar(10),
         my_xml          xml
@@ -100,7 +98,7 @@ INSERT INTO xml_table VALUES
 
 SELECT * FROM xml_table;
 
-DROP TABLE xml_table2;
+
 CREATE TABLE xml_table2 (my_xml xml);
 INSERT INTO xml_table2 VALUES 
 (
@@ -113,12 +111,9 @@ INSERT INTO xml_table2 VALUES
 );
 SELECT * FROM xml_table2;
 
-DROP TYPE TESTING.US_DOLLAR;
 CREATE DISTINCT TYPE TESTING.US_DOLLAR AS DECIMAL (9,2);
-DROP TYPE TESTING.CANADIAN_DOLLAR;
 CREATE DISTINCT TYPE TESTING.CANADIAN_DOLLAR AS DECIMAL (9,2);
 
-DROP TABLE sales;
 CREATE TABLE sales(
    sales_id     integer,
    amount_us    TESTING.US_DOLLAR,

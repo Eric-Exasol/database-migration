@@ -17,8 +17,3 @@ sleep 60
 exa_ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' exasoldb)"
 docker cp generate_script.sql exasoldb:/
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x"
-
-#./testing_files/test_oracle.sh;
-#./testing_files/test_mysql.sh;
-#./testing_files/test_sqlserver.sh;
-#./testing_files/test_postgres.sh; 

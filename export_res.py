@@ -23,7 +23,6 @@ else:
 	
 
 f = open("output.sql", "w")
-print(query)
 R = C.odbc.execute(query)
 output = R.fetchall()
 nrows = R.rowcount
