@@ -41,6 +41,7 @@ before_install:
     # allow test files to be executed
     - chmod +x testing_files/exasol_docker.sh
     - chmod +x testing_files/mock_test.sh
+    - chmod +x testing_files/test_exasol.sh    
     - chmod +x testing_files/test_mysql.sh
     - chmod +x testing_files/test_sqlserver.sh
     - chmod +x testing_files/test_postgres.sh
@@ -73,6 +74,7 @@ install:
     
 script: 
     - ./testing_files/mock_test.sh
+    - ./testing_files/test_exasol.sh
     - ./testing_files/test_mysql.sh
     - ./testing_files/test_sqlserver.sh
     - ./testing_files/test_postgres.sh
