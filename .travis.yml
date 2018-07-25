@@ -31,10 +31,6 @@ before_install:
     - git clone --depth=50 --branch=master https://github.com/EXASOL/python-exasol.git
     - cp -R python-exasol/* .
     
-    #cloning the testing_files from another repository
-    - git clone --branch=master https://github.com/Eric-Exasol/tests_files_database-migration.git
-    - cp -R tests_files_database-migration/* .
-    
     # move write odbc inis to home
     - ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
 
