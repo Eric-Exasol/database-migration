@@ -19,7 +19,7 @@ docker exec -u postgres postgresdb psql postgres postgres -f tmp/postgres_dataty
 
 #find the ip address of the postgres container
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' postgresdb)"
-echo "create or replace connection postgres_db to 'jdbc:postgresql://$ip:5432/postgres' user 'postgres' identified by 'postgres';" > testing_files/create_conn.sql
+echo "create or replace connection postgres_db to 'jdbc:postgresql://$ip:5432/postgres' user 'postgres' identified by 'postgres';" > test/testing_files/create_conn.sql
 
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/

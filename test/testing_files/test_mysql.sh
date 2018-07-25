@@ -17,7 +17,7 @@ docker exec -ti mysqldb sh -c "mysql < tmp/mysql_datatypes_test.sql -pmysql"
 
 #find the ip address of the mysql container
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' mysqldb)"
-echo "create or replace connection mysql_conn to 'jdbc:mysql://$ip:3306' user 'root' identified by 'mysql';" > testing_files/create_conn.sql
+echo "create or replace connection mysql_conn to 'jdbc:mysql://$ip:3306' user 'root' identified by 'mysql';" > test/testing_files/create_conn.sql
 
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/

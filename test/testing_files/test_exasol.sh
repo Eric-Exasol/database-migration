@@ -20,7 +20,7 @@ docker exec -ti exasoldb2 sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Cons
 
 #find the ip address of the mysql container
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' exasoldb2)"
-echo "create or replace connection SECOND_EXASOL_DB to '$ip:8888' user 'sys' identified by 'exasol';" > testing_files/create_conn.sql
+echo "create or replace connection SECOND_EXASOL_DB to '$ip:8888' user 'sys' identified by 'exasol';" > test/testing_files/create_conn.sql
 
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/

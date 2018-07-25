@@ -17,7 +17,7 @@ docker exec -ti sqlserverdb sh -c "/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U S
 
 #find the ip address of the postgres container
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' sqlserverdb)"
-echo "create or replace connection sqlserver_connection TO 'jdbc:jtds:sqlserver://$ip:1433' user 'sa' identified by 'my_strong_Password';" > testing_files/create_conn.sql
+echo "create or replace connection sqlserver_connection TO 'jdbc:jtds:sqlserver://$ip:1433' user 'sa' identified by 'my_strong_Password';" > test/testing_files/create_conn.sql
 
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/

@@ -4,10 +4,8 @@
 
 ## Overview
 
-This repository contains the test files needed to automatically test the scripts of the Exasol "Database Migration" repository found [here](https://github.com/EXASOL/database-migration).
-
-When automating the tests using Travis CI, the files in this repository will be fetch before the build is executed.
-The test files are in the folder `testing_files`.
+This folder contains the test files needed to automatically test the scripts of the Exasol "Database Migration" repository.
+The executable test files are in the subfolder `testing_files`.
 
 ## Test structure
 Before the tests are executed, an exasol docker container has been built (the name of the container is `exasoldb`) with the commands found in the `exasol_docker.sh` file.
