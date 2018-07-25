@@ -29,7 +29,7 @@ INSERT INTO exact_numerics VALUES (
 );
 GO
 
-SELECT * FROM exact_numerics;
+--SELECT * FROM exact_numerics;
 
 
 DROP TABLE IF EXISTS approx_numerics;
@@ -43,7 +43,7 @@ INSERT INTO approx_numerics VALUES (- 1.79E+308, - 3.40E+38);
 INSERT INTO approx_numerics VALUES (1.698,  3.40E+38);
 GO
 
-SELECT * FROM approx_numerics;
+--SELECT * FROM approx_numerics;
 
 
 DROP TABLE IF EXISTS date_types;
@@ -65,14 +65,14 @@ INSERT INTO date_types VALUES (
         '23:59:59.9999999'
 );
 
-SELECT my_datetimeOff from date_types;
-SELECT CONVERT(datetime2, my_datetimeOff, 1) AS converted from date_types;
+--SELECT my_datetimeOff from date_types;
+--SELECT CONVERT(datetime2, my_datetimeOff, 1) AS converted from date_types;
 
 DROP TABLE IF EXISTS datetimeoffset;
 CREATE TABLE datetimeoffset (dto datetimeoffset);
 INSERT INTO datetimeoffset VALUES ('12-10-25 12:32:10 +01:00'), ('12-10-25 12:32:10 +07:00'), ('12-10-25 12:32:10 +14:00'),
                                   ('12-10-25 12:32:10 -01:00'), ('12-10-25 12:32:10 -07:00'), ('12-10-25 12:32:10 -14:00');
-SELECT * FROM datetimeoffset;
+--SELECT * FROM datetimeoffset;
 
 DROP TABLE IF EXISTS string_types;
 CREATE TABLE string_types (
@@ -95,7 +95,7 @@ INSERT INTO string_types VALUES (
          'In SQL Server, each column, local variable, expression, and parameter has a related data type. A data type is an attribute that specifies the type of data that the object can hold: integer data, character data, monetary data, date and time data, binary strings, and so on.' 
 );
 
-SELECT * FROM string_types;
+--SELECT * FROM string_types;
 
 
 DROP TABLE IF EXISTS bin_string_types;
@@ -123,7 +123,7 @@ INSERT INTO bin2_string_types VALUES (
         CAST('jdjkskfdsklfjkdsfjdqkldlslfkjdsflk' AS VARBINARY(MAX))
 );
         
-SELECT * FROM bin_string_types;
+--SELECT * FROM bin_string_types;
 
 
 DROP TABLE IF EXISTS spatial_types;
@@ -142,7 +142,7 @@ INSERT INTO spatial_types VALUES (
         geography::STGeomFromText('POLYGON((-122.358 47.653 , -122.348 47.649, -122.348 47.658, -122.358 47.658, -122.358 47.653))', 4326)
 );
 
-SELECT * FROM spatial_types;
+--SELECT * FROM spatial_types;
 
 
 DROP TABLE IF EXISTS other_types;
@@ -191,17 +191,17 @@ INSERT INTO other_types VALUES
 </food>'
 );    
 
-SELECT * FROM other_types;
+--SELECT * FROM other_types;
 
 DROP TABLE IF EXISTS long_numeric;
 CREATE TABLE long_numeric (my_long numeric(38,38));
 INSERT INTO long_numeric VALUES 
 (-0.123456789123456789123456789125678912),(0.100000000000000000000000000000000000),(0.123456789123458912345678912345678912);
-SELECT * FROM long_numeric;
+--SELECT * FROM long_numeric;
 
 DROP TABLE IF EXISTS long_decimal;
 CREATE TABLE long_decimal (my_long decimal(38));
 INSERT INTO long_decimal VALUES 
 (-123456789123456789123456789123456789),(100000000000000000000000000000000000),(345678912345678912345678912345678912);
-SELECT * FROM long_decimal;
+--SELECT * FROM long_decimal;
         

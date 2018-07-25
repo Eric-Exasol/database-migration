@@ -27,7 +27,7 @@ INSERT INTO numeric_types VALUES (
 );
         
         
-SELECT * FROM testing_datatypes_schema.numeric_types;
+--SELECT * FROM testing_datatypes_schema.numeric_types;
 
 
 DROP TABLE IF EXISTS decimal_types CASCADE;
@@ -39,7 +39,7 @@ CREATE TABLE decimal_types (
   my_decimal5   decimal(15,10)
 );
 INSERT INTO decimal_types VALUES (0.3232012,0.021121211,0,1234561450.3123,0);
-SELECT * FROM decimal_types;
+--SELECT * FROM decimal_types;
 
 
 DROP TABLE IF EXISTS money CASCADE;
@@ -50,7 +50,7 @@ INSERT INTO money VALUES (100000, 'no');
 INSERT INTO money VALUES (10000000, 'y');
 INSERT INTO money VALUES (100000000, 'off');
 INSERT INTO money VALUES (1000000000, '0');
-SELECT * FROM money;
+--SELECT * FROM money;
 
 DROP TABLE IF EXISTS character_types CASCADE;
 CREATE TABLE character_types (
@@ -67,14 +67,14 @@ INSERT INTO character_types VALUES (
         'SQL defines two primary character types: character varying(n) and character(n), where n is a positive integer. Both of these types can store strings up to n characters (not bytes) in length. An attempt to store a longer string into a column of these types will result in an error, unless the excess characters are all spaces, in which case the string will be truncated to the maximum length. (This somewhat bizarre exception is required by the SQL standard.) If the string to be stored is shorter than the declared length, values of type character will be space-padded; values of type character varying will simply store the shorter string.'
 );
 
-SELECT * FROM character_types;   
+--SELECT * FROM character_types;   
 
 DROP TABLE IF EXISTS bytea CASCADE;
 CREATE TABLE bytea (my_bytea bytea);
 INSERT INTO bytea VALUES (
         'A binary string is a sequence of octets (or bytes)'
 );
-SELECT * FROM bytea;
+--SELECT * FROM bytea;
 
 DROP TABLE IF EXISTS date_types CASCADE;
 CREATE TABLE date_types (
@@ -103,7 +103,7 @@ INSERT INTO date_types VALUES (
         '3 4:05:06'
 );
 
-SELECT * FROM date_types;
+--SELECT * FROM date_types;
 
 
 DROP TABLE IF EXISTS geometric_types CASCADE;
@@ -125,7 +125,7 @@ INSERT INTO geometric_types VALUES (
         '(( 1 , 2 ) , ( 5 , 6 ), ( 0 , 1 ) , ( 11 , 12 ))',
         '( ( 0 , 0 ) , 2 )'
 );
-SELECT * FROM geometric_types; 
+--SELECT * FROM geometric_types; 
 
 DROP TABLE IF EXISTS networkaddr_types CASCADE;
 CREATE TABLE networkaddr_types (
@@ -136,14 +136,14 @@ CREATE TABLE networkaddr_types (
 INSERT INTO networkaddr_types VALUES ('192.168.100.128/25', '192.168.100.128/25', '08:00:2b:01:02:03');
 INSERT INTO networkaddr_types VALUES ('2001:4f8:3:ba::/64', '::ffff:1.2.3.0/128', '08002b:010203');
 INSERT INTO networkaddr_types VALUES ('128.1', '10.1.2.0/24', '0800.2b01.0203');
-SELECT * FROM networkaddr_types;
+--SELECT * FROM networkaddr_types;
         
 DROP TABLE IF EXISTS bitstring_types CASCADE;
 CREATE TABLE bitstring_types (a BIT(3), b BIT VARYING(5));
 INSERT INTO bitstring_types VALUES (B'101', B'00');
 INSERT INTO bitstring_types VALUES (B'100', B'101');
 INSERT INTO bitstring_types VALUES (B'100'::bit(3), B'101');
-SELECT * FROM bitstring_types;
+--SELECT * FROM bitstring_types;
 
 DROP TABLE IF EXISTS xmljson CASCADE; 
 CREATE TABLE xmljson (my_xml xml, my_json json);
@@ -161,7 +161,7 @@ INSERT INTO xmljson VALUES (
           }
         }}'
 );
-SELECT * FROM xmljson;
+--SELECT * FROM xmljson;
 
 
 CREATE TYPE weekday AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
@@ -176,4 +176,4 @@ INSERT INTO other_types VALUES (
         ROW('fuzzy dice', 42, 1.99),
         'Mon'
 );
-SELECT * FROM other_types;
+--SELECT * FROM other_types;

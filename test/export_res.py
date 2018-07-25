@@ -27,6 +27,5 @@ R = C.odbc.execute(query)
 output = R.fetchall()
 nrows = R.rowcount
 for i in range(0, nrows):
-	print(output[i][0])
 	f.write(output[i][0] + "\n")
 f.close()

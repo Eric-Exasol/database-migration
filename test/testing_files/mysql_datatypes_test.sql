@@ -25,7 +25,7 @@ INSERT INTO numeric_types (my_tinyint, my_smallint, my_mediumint, my_int, my_big
         '12.3'
 );
 
-SELECT * FROM numeric_types;
+--SELECT * FROM numeric_types;
 
 
 DROP TABLE IF EXISTS decimal_types CASCADE;
@@ -37,7 +37,7 @@ CREATE TABLE decimal_types (
   my_decimal5   decimal(15,10)
 );
 INSERT INTO decimal_types VALUES (0.3232012,0.021121211,0,1234561450.3123,0);
-SELECT * FROM decimal_types;
+--SELECT * FROM decimal_types;
 
 
 DROP TABLE IF EXISTS test_bit CASCADE;
@@ -46,7 +46,7 @@ INSERT INTO test_bit (my_bit) VALUES (b'00001');
 INSERT INTO test_bit(my_bit) VALUES (b'00000');
 INSERT INTO test_bit(my_bit) VALUES (b'1');
 
-SELECT * FROM test_bit;
+--SELECT * FROM test_bit;
 
 DROP TABLE IF EXISTS string_types CASCADE;
 CREATE TABLE string_types (
@@ -101,7 +101,7 @@ INSERT INTO test_time VALUES ('3:03:03');
 INSERT INTO test_time VALUES ('13:03:03');
 INSERT INTO test_time VALUES ('23:03:03');
 INSERT INTO test_time VALUES ('11:03:03');
-SELECT length(my_time) FROM test_time;
+--SELECT length(my_time) FROM test_time;
 
 DROP TABLE IF EXISTS test_year CASCADE;
 CREATE TABLE test_year (my_year year(4));
@@ -109,7 +109,7 @@ INSERT INTO test_year VALUES ('3');
 INSERT INTO test_year VALUES ('13');
 INSERT INTO test_year VALUES ('23');
 INSERT INTO test_year VALUES ('33');
-SELECT length(my_year) FROM test_year;
+--SELECT length(my_year) FROM test_year;
 
 -- SELECT length(my_time) FROM date_types;
 
