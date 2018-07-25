@@ -25,8 +25,6 @@ INSERT INTO numeric_types (my_tinyint, my_smallint, my_mediumint, my_int, my_big
         '12.3'
 );
 
---SELECT * FROM numeric_types;
-
 
 DROP TABLE IF EXISTS decimal_types CASCADE;
 CREATE TABLE decimal_types (
@@ -37,7 +35,6 @@ CREATE TABLE decimal_types (
   my_decimal5   decimal(15,10)
 );
 INSERT INTO decimal_types VALUES (0.3232012,0.021121211,0,1234561450.3123,0);
---SELECT * FROM decimal_types;
 
 
 DROP TABLE IF EXISTS test_bit CASCADE;
@@ -46,7 +43,6 @@ INSERT INTO test_bit (my_bit) VALUES (b'00001');
 INSERT INTO test_bit(my_bit) VALUES (b'00000');
 INSERT INTO test_bit(my_bit) VALUES (b'1');
 
---SELECT * FROM test_bit;
 
 DROP TABLE IF EXISTS string_types CASCADE;
 CREATE TABLE string_types (
@@ -76,7 +72,6 @@ VALUES (
         
 );
 
--- SELECT * FROM string_types;
         
 DROP TABLE IF EXISTS date_types CASCADE;
 CREATE TABLE date_types (
@@ -101,7 +96,6 @@ INSERT INTO test_time VALUES ('3:03:03');
 INSERT INTO test_time VALUES ('13:03:03');
 INSERT INTO test_time VALUES ('23:03:03');
 INSERT INTO test_time VALUES ('11:03:03');
---SELECT length(my_time) FROM test_time;
 
 DROP TABLE IF EXISTS test_year CASCADE;
 CREATE TABLE test_year (my_year year(4));
@@ -109,9 +103,6 @@ INSERT INTO test_year VALUES ('3');
 INSERT INTO test_year VALUES ('13');
 INSERT INTO test_year VALUES ('23');
 INSERT INTO test_year VALUES ('33');
---SELECT length(my_year) FROM test_year;
-
--- SELECT length(my_time) FROM date_types;
 
         
 DROP TABLE IF EXISTS spatial_types CASCADE;
@@ -139,9 +130,6 @@ INSERT INTO spatial_types (my_geometry, my_point, my_linestring, my_polygon, my_
 );
 
 
-SELECT AsText(my_geometry), AsText(my_point), AsText(my_linestring), AsText(my_polygon), AsText(my_gc) FROM spatial_types;
-
-
 
 DROP TABLE IF EXISTS test_json CASCADE;
 CREATE TABLE test_json (my_json JSON);
@@ -159,7 +147,6 @@ INSERT INTO test_json (my_json) VALUES (
         }}'
 );
 
-SELECT * FROM test_json;
 
 DROP TABLE IF EXISTS test_json2 CASCADE;
 CREATE TABLE test_json2 (id int, my_json JSON);
@@ -177,7 +164,6 @@ INSERT INTO test_json2 (id, my_json) VALUES (1,
         }}'
 );
 
-SELECT * FROM test_json2;
 
 DROP TABLE IF EXISTS test_json3 CASCADE;
 CREATE TABLE test_json3 (id int, my_json JSON, string varchar(20));
@@ -196,7 +182,6 @@ INSERT INTO test_json3 (id, my_json, string) VALUES (1,
         'hello!'
 );
 
-SELECT * FROM test_json3;
 
 DROP TABLE IF EXISTS test_json4 CASCADE;
 CREATE TABLE test_json4 (my_json JSON, another_json JSON, string varchar(20));
@@ -225,6 +210,4 @@ INSERT INTO test_json4 (my_json, another_json, string) VALUES (
         }}',
         'hello!'
 );
-
-SELECT * FROM test_json4;
 
