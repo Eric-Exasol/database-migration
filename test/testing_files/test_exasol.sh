@@ -15,7 +15,7 @@ docker run --name exasoldb2 -p 127.0.0.1:8877:8888 --detach --privileged --stop-
 sleep 60
 
 
-docker cp test/retail_mini/ exasoldb2:/
+docker cp test/testing_files/retail_mini/ exasoldb2:/
 docker exec -ti exasoldb2 sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "retail_mini/retail_mini.sql" -x"
 
 #find the ip address of the mysql container
