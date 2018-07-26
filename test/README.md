@@ -53,7 +53,7 @@ The command above creates the desired script inside the `database_migration` sch
 ```
 PYTHONPATH=<path> python test/export_res.py "MYSQL_TO_EXASOL" "mysql_conn" "test%" "%"
 ```
-The first parameter is the scriptname, the second is the connection name, the third is the schema filter and the fourth is the database filter.
+The first parameter is the scriptname, the second is the connection name, the third is the schema filter and the fourth is the table filter.
 This python script will create a file called *output.sql* with the corresponding `create table` and `import into` statements.
 
 5. We now want to execute the *output.sql* file in the `exasoldb` container to finally create the tables and insert the data into the `database_migration` schema previously created. We do it with the following commands : 
