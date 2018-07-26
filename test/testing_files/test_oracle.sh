@@ -14,7 +14,7 @@ docker cp testing_files/oracle_datatypes_test.sql oracledb:/tmp/
 docker exec -ti oracledb sh -c "echo exit | sqlplus -S system/oracle@localhost:1521/xe @/tmp/oracle_datatypes_test.sql"
 
 
-#find the ip address of the mysql container
+#find the ip address of the oracle container
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' oracledb)"
 echo "CREATE OR REPLACE CONNECTION OCI_ORACLE TO '$ip:1521/xe' USER 'system' IDENTIFIED BY 'oracle';" > testing_files/create_conn.sql
 

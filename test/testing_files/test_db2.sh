@@ -17,7 +17,7 @@ docker cp test/testing_files/db2_datatypes_test.sql db2db:/home/db2inst1/
 #execute the file inside the db2db container
 docker exec -it db2db bin/bash -c "su - db2inst1 -c \"db2 -stvf db2_datatypes_test.sql\""
 
-#find the ip address of the mysql container
+#find the ip address of the db2 container
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' db2db)"
 echo "create or replace CONNECTION db2_connection TO 'jdbc:db2://$ip:50000/sample' USER 'db2inst1' IDENTIFIED BY 'test123';" > test/testing_files/create_conn.sql
 

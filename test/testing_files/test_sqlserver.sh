@@ -15,7 +15,7 @@ docker cp test/testing_files/sqlserver_datatypes_test.sql sqlserverdb:/tmp/
 #execute the file inside the sqlserver container
 docker exec -ti sqlserverdb sh -c "/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U SA -P 'my_strong_Password' -i tmp/sqlserver_datatypes_test.sql"
 
-#find the ip address of the postgres container
+#find the ip address of the sqlserver container
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' sqlserverdb)"
 echo "create or replace connection sqlserver_connection TO 'jdbc:jtds:sqlserver://$ip:1433' user 'sa' identified by 'my_strong_Password';" > test/testing_files/create_conn.sql
 
