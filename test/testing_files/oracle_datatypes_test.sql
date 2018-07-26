@@ -9,21 +9,21 @@ DATAFILE 'tbs_perm_01.dat'
 SIZE 20M
 ONLINE;
   
-CREATE USER eric
+CREATE USER exasol
 IDENTIFIED BY oracle
 DEFAULT TABLESPACE tbs_perm_01
 TEMPORARY TABLESPACE tbs_temp_01
 QUOTA 20M on tbs_perm_01;
 
-GRANT create session TO eric;
-GRANT create table TO eric;
-GRANT create view TO eric;
-GRANT create any trigger TO eric;
-GRANT create any procedure TO eric;
-GRANT create sequence TO eric;
-GRANT create synonym TO eric;
+GRANT create session TO exasol;
+GRANT create table TO exasol;
+GRANT create view TO exasol;
+GRANT create any trigger TO exasol;
+GRANT create any procedure TO exasol;
+GRANT create sequence TO exasol;
+GRANT create synonym TO exasol;
 
-ALTER SESSION SET CURRENT_SCHEMA = eric;
+ALTER SESSION SET CURRENT_SCHEMA = exasol;
 
 CREATE TABLE string_types (
   my_char char(50),
