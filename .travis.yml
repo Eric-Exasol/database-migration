@@ -42,6 +42,7 @@ install:
 - python setup.py install --prefix=$HOME/exa_py
 script:
 - "./test/testing_files/mock_test.sh"
+- "./test/testing_files/test_oracle.sh"
 - "./test/testing_files/test_exasol.sh"
 - "./test/testing_files/test_mysql.sh"
 - "./test/testing_files/test_sqlserver.sh"
