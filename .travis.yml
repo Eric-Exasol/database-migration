@@ -1,74 +1,47 @@
 language: python
-
 python:
-    - 2.7
-
+- 2.7
 sudo: required
-
 services:
-  - docker
-  
+- docker
 addons:
   apt:
     packages:
-      - unixodbc-dev
-      
+    - unixodbc-dev
 env:
   global:
-    - EXAODBC=EXASOL_ODBC-6.0.2
-    - EXAODBC_URL=https://www.exasol.com/support/secure/attachment/52896/
-    - ODBCINI=$HOME/odbc.ini
-    - ODBCSYSINI=$HOME
-    - EXAHOST="127.0.0.1:8899"
-    - EXAUSER="sys"
-    - EXAPW="exasol"
-    - ODBC_HOST="127.0.0.1:8899"
-    #https://www.exasol.com/support/secure/attachment/52896/EXASOL_ODBC-6.0.2.tar.gz
-    - secure: "EQ1UTS5x4Yf3REeIOs4ZWX2PatwnFgHH7sxoBXYYblhDXAHC2Pj6QhYYkSLvjeZSahWCQwD9p9Q4WK+Uehl3numPKEsK70f5WmwwAH2jF322rGVxdwsW8GzvopmbZscN22zHy0JNG+MoeNYeIcYyMZhqz97p291hgSU4zD/+fGwTVOL336aSJHbRiQGBCjAuYpnfyHx97nyJWaDGvHTzSMJ9dqPkMKdashPorkeGOZy7xp81ddqVoCMeBDFwFWdPOU/lOvN4hSOIl0N0oQX+dW4Lbux7G1AyAGWtIZC7Gz0HfdlZzwgIGQtPDdTGCB2gsPesneNYhTLMHc6/7ZRubXaT1yeYjQY4AYXN0LFL5cBlxwsBhHlJbVlSEmnf32tRzIQ/X4uz7bTLgMSXBseaNK8RyBQAVf2pGYKAst33hKy+3tRellSoXPHvj21EFgmX76L3wOuvacQf2BIBVlv3b6M0y6+p35UoRs3P1/kyorHjwdHBheJDRUkx56iQGC3UB+K4Ra1aSs9hYfYteeA2GWmXhdtqifQgr5cJsbY47yS6MIGtTV3hGPJm8KroljxJ61c35J5ZZL5tL03637hfSIjDqzpR5mesQFdKln17NUlMY04rxe0A1ghFAAYcVEMlBb5SSS8ImJ4PpdMFaU4lU7eb7KP+gv9gGDGiH8tNN9o="
-
+  - EXAODBC=EXASOL_ODBC-6.0.2
+  - EXAODBC_URL=https://www.exasol.com/support/secure/attachment/52896/
+  - ODBCINI=$HOME/odbc.ini
+  - ODBCSYSINI=$HOME
+  - EXAHOST="127.0.0.1:8899"
+  - EXAUSER="sys"
+  - EXAPW="exasol"
+  - ODBC_HOST="127.0.0.1:8899"
+  - secure: dl4X1Hi/PbYKhDn6dVJvX6sB+EhgwMBtZ4quiRsEnaqegi83zzWlPRYGuH3+vicivI+KF9YGnPLuVj5ha3JDuznYS5CSizPUHUAFvV/xYgGE1PsBhaYcrSSZfpUk1yOkX09ZrRSH6dI6rT+jFBGmj0GoqgzdnrTnkG31s63k5aMwAEJYLs48dE/zeRfX2ttE8V80uJWK5fvlFiKO3PwKBWUWvjB+ZuvsfVWuh/4H5k1OG9BabcGZz+G7i32wDN5P9xp2VrlfyH5cO3q2zmJ0Em+q0ZDXbqCwNcx5rLsUPnVuZiuXfLNghmHUIrmC8n4Rg950PbDmYWODLb2P7S3QKdf8bMtmaf/u0UrEJjL3hP6LIV5eAlNsppfHIRc/CR9sftq0dlcFNXu6I6oNGWqR1rc7MmCeb3kmHedYACtmfnCWWOcPD8MXLJKafTlEkcYPzyjzLcvGaqsRVXlaQBj7NKQLxNrGGSKYoh1xdWwr3Cc19wNQeyCbeL/PSZNmcV7tEx/CraRC0QQJFIMU2B+JYWvPz2f+ndqfPSfzQAToRWJffbXgThI/z5NJj+XOB9mjEQaDByfDU9P2Pmp8uVHNJdEw3RalwvRrxMJLU7/awQdFjB93qYF/L0LprsLltUGtiwVSScLdZ0ZVGLE2kqqNRZZu1/qBgOPuMh1cAG2ex/4=
 before_install:
-    
-    - cat $testEncrypt
-    
-    #cloning the python-exasol package repository
-    - git clone --depth=50 --branch=master https://github.com/EXASOL/python-exasol.git
-    - cp -R python-exasol/* .
-    
-    # move write odbc inis to home
-    - ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
-
-    # allow test files to be executed
-    - chmod +x test/testing_files/*
-    
-    #install exasol image and run container
-    - ./test/testing_files/exasol_docker.sh
-    
-    # get unixODBC
-    - wget www.unixodbc.org/unixODBC-2.3.4.tar.gz
-    
-    # get EXAODBC    
-    - wget $EXAODBC_URL$EXAODBC".tar.gz"
-
+- curl -L $TEST_PATH -o my_test.txt
+- cat my_test.txt
+- git clone --depth=50 --branch=master https://github.com/EXASOL/python-exasol.git
+- cp -R python-exasol/* .
+- ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
+- chmod +x test/testing_files/*
+- "./test/testing_files/exasol_docker.sh"
+- wget www.unixodbc.org/unixODBC-2.3.4.tar.gz
+- wget $EXAODBC_URL$EXAODBC".tar.gz"
 install:
-    - pip install pyodbc
-    - pip install pandas
-    
-    # install unixodbc
-    - tar -xzf unixODBC-2.3.4.tar.gz
-    - ./unixODBC-2.3.4/configure --prefix=$HOME/unixodbc
-    - make
-    - make install
-
-    # install EXAODBC
-    - tar -xzf $EXAODBC".tar.gz"
-    - ./$EXAODBC/config_odbc --mode=config --host=$EXAHOST --user=$EXAUSER --password=$EXAPW
-    
-    # install py sdk
-    - python setup.py install --prefix=$HOME/exa_py
-    
-script: 
-    - ./test/testing_files/mock_test.sh
-    - ./test/testing_files/test_exasol.sh
-    - ./test/testing_files/test_mysql.sh
-    - ./test/testing_files/test_sqlserver.sh
-    - ./test/testing_files/test_postgres.sh
+- pip install pyodbc
+- pip install pandas
+- tar -xzf unixODBC-2.3.4.tar.gz
+- "./unixODBC-2.3.4/configure --prefix=$HOME/unixodbc"
+- make
+- make install
+- tar -xzf $EXAODBC".tar.gz"
+- "./$EXAODBC/config_odbc --mode=config --host=$EXAHOST --user=$EXAUSER --password=$EXAPW"
+- python setup.py install --prefix=$HOME/exa_py
+script:
+- "./test/testing_files/mock_test.sh"
+- "./test/testing_files/test_exasol.sh"
+- "./test/testing_files/test_mysql.sh"
+- "./test/testing_files/test_sqlserver.sh"
+- "./test/testing_files/test_postgres.sh"
