@@ -8,7 +8,7 @@ CREATE TABLESPACE tbs_perm_01
 DATAFILE 'tbs_perm_01.dat' 
 SIZE 20M
 ONLINE;
-  
+
 CREATE USER exasol
 IDENTIFIED BY oracle
 DEFAULT TABLESPACE tbs_perm_01
@@ -34,9 +34,9 @@ CREATE TABLE string_types (
   my_raw raw(10),
   my_long long,
   --my_longraw long raw (1550),
-  my_blob blob,
-  my_clob clob,
-  my_nclob nclob
+  my_blob blob
+  -- my_clob clob,
+  -- my_nclob nclob
 );
 
 INSERT INTO string_types VALUES (
@@ -47,24 +47,25 @@ INSERT INTO string_types VALUES (
   '33333ezrrezrmlom"émlmmmmsdmfdfé=)"é="zezrzerel',
   '123456789',
   'llllllllllooooooonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnngggggggggggggggggggggggggggggggggggggggggggggggg',
-  utl_raw.cast_to_raw('blllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'),
-  'cllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  'nclllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+  utl_raw.cast_to_raw('blllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+  -- 'cllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  -- 'nclllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 );
 
 
 CREATE TABLE string_types2 (
   my_long long,
-  my_blob blob,
-  my_nclob nclob
+  my_blob blob
+  --my_nclob nclob
 );
 
 INSERT INTO string_types2 VALUES (
   'llllllllllooooooonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnngggggggggggggggggggggggggggggggggggggggggggggggg',
-  utl_raw.cast_to_raw('blllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'),
-  'nclllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+  utl_raw.cast_to_raw('blllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+  --'nclllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooobbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 );
-SELECT * FROM string_types2;
+
+--SELECT * FROM string_types2;
 
 CREATE TABLE decimal_types (
   my_decimal    decimal(38,38),
@@ -74,7 +75,7 @@ CREATE TABLE decimal_types (
   my_decimal5   decimal(15,10)
 );
 INSERT INTO decimal_types VALUES (0.3232012,0.021121211,0,1234561450.3123,0);
-SELECT * FROM decimal_types;
+--SELECT * FROM decimal_types;
 
 CREATE TABLE numeric_types (
   my_number number,
@@ -108,7 +109,7 @@ INSERT INTO numeric_types VALUES (
   1234987.120871234
 );
 
-SELECT * FROM numeric_types;
+--SELECT * FROM numeric_types;
 
 
 CREATE TABLE date_types (
@@ -133,6 +134,6 @@ INSERT INTO date_types VALUES (
   '1 11:12:10.123'
 );
 
-SELECT * FROM date_types;
+--SELECT * FROM date_types;
 
 
