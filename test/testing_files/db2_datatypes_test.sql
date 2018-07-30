@@ -15,7 +15,7 @@ CREATE TABLE numerics (
 );
 
 INSERT INTO numerics VALUES (-9223372036854775807, 2147483647, -32768, '0.000000012', '0.000000012', '0.000000012', '123456789.12', 0, '0.000000012');
-SELECT * FROM numerics;
+-- SELECT * FROM numerics;
 
 CREATE TABLE character_strings (
         my_char       character(15),
@@ -35,7 +35,7 @@ INSERT INTO character_strings VALUES (
         null,
         null
 );
-SELECT * FROM character_strings;
+-- SELECT * FROM character_strings;
 
 CREATE TABLE date_types (
         my_date         date,
@@ -48,7 +48,7 @@ INSERT INTO date_types VALUES (
         '10:00:00',
         '1020-01-01 21:59:59.9999999'
 );
-SELECT * FROM date_types;
+-- SELECT * FROM date_types;
 
 
 CREATE TABLE xml_table (
@@ -96,7 +96,7 @@ INSERT INTO xml_table VALUES
 </food>'
 ); 
 
-SELECT * FROM xml_table;
+-- SELECT * FROM xml_table;
 
 
 CREATE TABLE xml_table2 (my_xml xml);
@@ -109,7 +109,7 @@ INSERT INTO xml_table2 VALUES
   <body>Dont forget me this weekend!</body>
 </note>'
 );
-SELECT * FROM xml_table2;
+-- SELECT * FROM xml_table2;
 
 CREATE DISTINCT TYPE TESTING.US_DOLLAR AS DECIMAL (9,2);
 CREATE DISTINCT TYPE TESTING.CANADIAN_DOLLAR AS DECIMAL (9,2);
@@ -120,4 +120,4 @@ CREATE TABLE sales(
    amount_can   TESTING.CANADIAN_DOLLAR
 );
 INSERT INTO sales VALUES (1, 1000.45, 999.99);
-SELECT * FROM sales;
+-- SELECT * FROM sales;

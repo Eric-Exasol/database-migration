@@ -4,7 +4,6 @@ echo $MY_MESSAGE
 
 set -e
 
-
 #setting up an exasol db image in docker
 docker pull exasol/docker-db:latest
 # to run locally : docker run --name exasoldb -p 8877:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
@@ -41,3 +40,7 @@ docker cp $file exasoldb:/
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
 #delete the file from current directory
 [ ! -e $file ] || rm $file
+
+#stop and remove exasoldb2 container
+docker stop exasoldb2
+docker rm -v exasoldb2

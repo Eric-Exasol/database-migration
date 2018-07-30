@@ -42,3 +42,7 @@ docker cp $file exasoldb:/
 docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
 #delete the file from current directory
 [ ! -e $file ] || rm $file
+
+#stop and remove postgresdb container
+docker stop postgresdb
+docker rm -v postgresdb
