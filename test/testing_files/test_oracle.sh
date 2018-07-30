@@ -22,16 +22,15 @@ echo "CREATE OR REPLACE CONNECTION OCI_ORACLE TO '$ip:1521/xe' USER 'system' IDE
 
 docker cp exasoldb:/exa/etc/EXAConf .
 pwd="$(awk '/WritePasswd/{ print $3; }' EXAConf | base64 -d)"
-echo $pwd
 
 docker cp instantclient-basic-linux.x64-12.1.0.2.0.zip exasoldb:/
 docker exec -ti exasoldb sh -c "curl -v -X PUT -T instantclient-basic-linux.x64-12.1.0.2.0.zip http://w:$pwd@127.0.0.1:6583/default/drivers/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip"
 sleep 20
 
 #copy .sql file to be executed inside container
-docker cp test/testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/
+docker cp test/testing_files/create_conn.sql exasoldb:/
 #execute the file inside the exasoldb container
-docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/create_conn.sql" -x"
+docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
 
 #create the script that we want to execute
 PYTHONPATH=$HOME/exa_py/lib/python2.7/site-packages python test/create_script.py "oracle_to_exasol.sql"
