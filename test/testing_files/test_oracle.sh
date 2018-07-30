@@ -20,12 +20,10 @@ docker exec -ti oracledb sh -c "echo exit | sqlplus -S system/oracle@localhost:1
 ip="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' oracledb)"
 echo "CREATE OR REPLACE CONNECTION OCI_ORACLE TO '$ip:1521/xe' USER 'system' IDENTIFIED BY 'oracle';" > test/testing_files/create_conn.sql
 
-tmp="$(docker exec -ti exasoldb sh -c "awk '/WritePasswd/{ print $3; }' exa/etc/EXAConf")"
-echo $tmp
-b64pwd=${tmp:21}
-echo $b64pwd
-pwd="$(echo $b64pwd | base64 -d)"
+docker cp exasoldb:/exa/etc/EXAConf .
+pwd="$(awk '/WritePasswd/{ print $3; }' EXAConf | base64 -d)"
 echo $pwd
+
 docker cp instantclient-basic-linux.x64-12.1.0.2.0.zip exasoldb:/
 docker exec -ti exasoldb sh -c "curl -v -X PUT -T instantclient-basic-linux.x64-12.1.0.2.0.zip http://w:$pwd@127.0.0.1:6583/default/drivers/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip"
 
