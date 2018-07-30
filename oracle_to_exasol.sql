@@ -6,6 +6,7 @@ create schema database_migration;
 	applied whenever needed. Feel free to adjust it. 
 */
 
+--/
 create or replace script database_migration.ORACLE_TO_EXASOL (
 CONNECTION_NAME				 -- name of the database connection inside exasol -> e.g. mysql_db
 ,IDENTIFIER_CASE_INSENSITIVE -- TRUE if identifiers should be put uppercase
@@ -162,13 +163,11 @@ success, res = pquery([[with ora_cols as(
 	),
 	cr_schema as (
 		with EXA_SCHEMAS as (select distinct EXA_SCHEMA_NAME as EXA_SCHEMA from ora_base )
-			select 'create schema "' ||  EXA_SCHEMA ||'";' as cr_schema from EXA_SCHEMAS
+			select 'create schema if not exists "' ||  EXA_SCHEMA ||'";' as cr_schema from EXA_SCHEMAS
 	),
 	cr_tables as (
-		select 'create table "' || EXA_SCHEMA_NAME || '"."' || EXA_TABLE_NAME || '" ( 
-' || cols || '
-)
-;' as tbls from 
+		select 'create or replace table "' || EXA_SCHEMA_NAME || '"."' || EXA_TABLE_NAME || '" (' || cols || '); ' || cols2 || ''
+as tbls from 
 (select EXA_SCHEMA_NAME, EXA_TABLE_NAME, 
 		group_concat( 
 		case 
@@ -185,14 +184,23 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)%' or data_type like 'TIMESTAMP' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'timestamp'
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'timestamp' 
 			when data_type = 'BOOLEAN' then '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'boolean'
-			else '--UNSUPPORTED DATATYPE IN COLUMN ' || EXA_COLUMN_NAME || ' Oracle Datatype: ' || data_type  end
+			-- Fallback for unsupported data types
+			-- else '"' || EXA_COLUMN_NAME || '"' || ' ' ||  'varchar(2000000) /* UNSUPPORTED DATA TYPE : ' || data_type || ' */ '
+			end
 			
 		|| case when identity_column='YES' then ' IDENTITY' end
 		|| case when nullable='N' then ' NOT NULL' end
 		
-	order by column_id SEPARATOR ', 
-') as cols 
-		from ora_base group by EXA_SCHEMA_NAME, EXA_TABLE_NAME)
+	order by column_id SEPARATOR ', ')
+	as cols,
+                group_concat( 
+                        case 
+                        when data_type not in ('CHAR', 'NCHAR', 'VARCHAR', 'VARCHAR2', 'NVARCHAR2', 'CLOB', 'XMLTYPE', 'DECIMAL', 'NUMBER', 'DOUBLE PRECISION', 'FLOAT', 'BINARY_FLOAT', 'BINARY_DOUBLE', 'DATE', 'BOOLEAN', 'TIMESTAMP') and data_type not like 'TIMESTAMP(%)%' and data_type not like 'TIMESTAMP%WITH%TIME%ZONE%'
+                        then '--UNSUPPORTED DATA TYPE : "'|| EXA_COLUMN_NAME || '" ' || data_type || ''
+                        end
+                ) 
+	as cols2 
+        from ora_base group by EXA_SCHEMA_NAME, EXA_TABLE_NAME)
 	),
 	cr_import_stmts as (
 		select 'import into "' || EXA_SCHEMA_NAME ||'"."' || EXA_TABLE_NAME || '"( ' || 
@@ -211,7 +219,7 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)%' or data_type like 'TIMESTAMP' then '"' || EXA_COLUMN_NAME || '"' 
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then '"' || EXA_COLUMN_NAME || '"' 
 			when data_type = 'BOOLEAN' then '"' || EXA_COLUMN_NAME || '"' 
-			else '--UNSUPPORTED DATATYPE IN COLUMN ' || COLUMN_NAME || ' Oracle Datatype: ' || data_type  
+			/* else '--UNSUPPORTED DATATYPE IN COLUMN ' || COLUMN_NAME || ' Oracle Datatype: ' || data_type  */
 		end
 				
 	order by column_id SEPARATOR ', 
@@ -237,7 +245,7 @@ success, res = pquery([[with ora_cols as(
 			when data_type like 'TIMESTAMP(%)' or data_type like 'TIMESTAMP' then '"' || column_name || '"' 
 			when data_type like 'TIMESTAMP%WITH%TIME%ZONE%' then 'cast("' || column_name || '" as TIMESTAMP)' 
 			when data_type = 'BOOLEAN' then '"' || column_name || '"' 
-			else '--UNSUPPORTED DATATYPE IN COLUMN ' || column_name || ' Oracle Datatype: ' || data_type  
+			/* else '--UNSUPPORTED DATATYPE IN COLUMN ' || column_name || ' Oracle Datatype: ' || data_type  */
 		end
 			
 	order by column_id SEPARATOR ', 
@@ -246,21 +254,26 @@ success, res = pquery([[with ora_cols as(
 
 || ' from ' ||  '"' || owner || '"."' || table_name || '"' || ''';'  as imp from ora_base group by owner, table_name, EXA_SCHEMA_NAME, EXA_TABLE_NAME
 	)
-select '-- session parameter values are being taken from Oracle systemwide database_parameters and converted. However these should be confirmed before use.'
+select sql_text from (
+select 1 as ord_hlp,'-- session parameter values are being taken from Oracle systemwide database_parameters and converted. However these should be confirmed before use.' as sql_text
 union all
-select '-- Oracle DB''s NLS_CHARACTERSET is set to : ' || "VALUE" from nls_format where "PARAMETER"='NLS_CHARACTERSET'
+select 2, '-- Oracle DB''s NLS_CHARACTERSET is set to : ' || "VALUE" from nls_format where "PARAMETER"='NLS_CHARACTERSET'
 union all
-select '-- ALTER SESSION SET NLS_DATE_LANGUAGE=''' || "VALUE" || ''';' from nls_format where "PARAMETER"='NLS_DATE_LANGUAGE'
+select 3,'-- ALTER SESSION SET NLS_DATE_LANGUAGE=''' || "VALUE" || ''';' from nls_format where "PARAMETER"='NLS_DATE_LANGUAGE'
 union all
-select '-- ALTER SESSION SET NLS_DATE_FORMAT=''' || replace("VALUE",'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_DATE_FORMAT'
+select 4,'-- ALTER SESSION SET NLS_DATE_FORMAT=''' || replace("VALUE",'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_DATE_FORMAT'
 union all
-select '-- ALTER SESSION SET NLS_TIMESTAMP_FORMAT=''' || replace(regexp_replace("VALUE",'XF+','.FF6'),'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_TIMESTAMP_FORMAT'
+select 5,'-- ALTER SESSION SET NLS_TIMESTAMP_FORMAT=''' || replace(regexp_replace("VALUE",'XF+','.FF6'),'R','Y') || ''';' from nls_format where "PARAMETER"='NLS_TIMESTAMP_FORMAT'
 union all
-select * from cr_schema
+select 6,a.* from cr_schema a
 union all
-select * from cr_tables
+select 7,b.* from cr_tables b
+where b.TBLS not like '%();%'
 union all
-select * from cr_import_stmts]],{c=CONNECTION_NAME, s=SCHEMA_FILTER, t=TABLE_FILTER})
+select 8,c.* from cr_import_stmts c
+where c.IMP not like '%( ) from%'
+) order by ord_hlp
+]],{c=CONNECTION_NAME, s=SCHEMA_FILTER, t=TABLE_FILTER})
 
 if not success then error(res.error_message) end
 
