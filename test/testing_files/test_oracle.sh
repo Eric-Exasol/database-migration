@@ -26,6 +26,7 @@ echo $pwd
 
 docker cp instantclient-basic-linux.x64-12.1.0.2.0.zip exasoldb:/
 docker exec -ti exasoldb sh -c "curl -v -X PUT -T instantclient-basic-linux.x64-12.1.0.2.0.zip http://w:$pwd@127.0.0.1:6583/default/drivers/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip"
+sleep 20
 
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/test/
