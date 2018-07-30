@@ -37,7 +37,6 @@ docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Conso
 
 docker cp exasoldb:/exa/etc/EXAConf .
 pwd="$(awk '/WritePasswd/{ print $3; }' EXAConf | base64 -d)"
-echo $pwd
 
 docker cp db2 exasoldb:/db2
 docker exec -ti exasoldb sh -c "curl -v -X PUT -T db2/settings.cfg http://w:$pwd@127.0.0.1:6583/default/drivers/jdbc/db2/"
