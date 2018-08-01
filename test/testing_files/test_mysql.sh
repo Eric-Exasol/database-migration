@@ -4,6 +4,8 @@ echo $MY_MESSAGE
 
 set -e
 
+EXAPLUS_PATH=$(docker exec -it exasoldb sh -c "find / -iname 'exaplus' 2> /dev/null")
+
 #setting up a mysql db image in docker
 docker pull mysql:5.7.22
 docker run --name mysqldb -p 3360:3306 -e MYSQL_ROOT_PASSWORD=mysql -d mysql:5.7.22
@@ -22,7 +24,7 @@ echo "create or replace connection mysql_conn to 'jdbc:mysql://$ip:3306' user 'r
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/
 #execute the file inside the exasoldb container
-docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
+docker exec -ti exasoldb sh -c "$EXAPLUS_PATH  -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
 
 
 
@@ -38,7 +40,7 @@ docker exec -ti exasoldb sh -c "[ ! -e $file ] || rm $file"
 #copy new output.sql file to be executed inside container
 docker cp $file exasoldb:/
 #execute the output.sql file created inside the exasoldb container
-docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.10/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
+docker exec -ti exasoldb sh -c "$EXAPLUS_PATH  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
 #delete the file from current directory
 [ ! -e $file ] || rm $file
 
