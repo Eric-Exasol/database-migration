@@ -13,8 +13,8 @@ docker run --name exasoldb -p 127.0.0.1:8899:8888 --detach --privileged --stop-t
 (docker logs -f --tail 0 exasoldb &) 2>&1 | grep -q -i 'stage4: All stages finished'
 sleep 60
 
-EXAPLUS_PATH=$(docker exec -it exasoldb sh -c "find / -iname 'exaplus' 2> /dev/null")
-
+export EXAPLUS_PATH=$(docker exec -it exasoldb sh -c "find / -iname 'exaplus' 2> /dev/null")
+echo $EXAPLUS_PATH
 #copy the generate_script.sql file
 docker cp test/generate_script.sql exasoldb:/
 #execute the generate_script.sql file which creates a script inside the exasoldb container

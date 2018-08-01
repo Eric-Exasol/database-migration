@@ -29,9 +29,9 @@ docker cp test/testing_files/create_conn.sql exasoldb:/
 docker exec -ti exasoldb sh -c "$EXAPLUS_PATH  -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
 
 #create the script that we want to execute
-PYTHONPATH=$HOME/exa_py/lib/python2.7/site-packages python test/create_script.py "exasol_to_exasol.sql"
+$PYTHONPATH python test/create_script.py "exasol_to_exasol.sql"
 #this python script executes the export script created by the exasol_to_exasol.sql script and creates an output.sql file with the result
-PYTHONPATH=$HOME/exa_py/lib/python2.7/site-packages python test/export_res.py "EXASOL_TO_EXASOL" "SECOND_EXASOL_DB" "RET%" "%"
+$PYTHONPATH python test/export_res.py "EXASOL_TO_EXASOL" "SECOND_EXASOL_DB" "RET%" "%"
 
 #delete previous output.sql file if exists : 
 file="output.sql"
