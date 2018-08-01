@@ -4,7 +4,7 @@ echo $MY_MESSAGE
 
 set -e
 
-EXAPLUS_PATH=$(docker exec -it exasoldb sh -c "find / -iname 'exaplus' 2> /dev/null")
+EXAPLUS_PATH="$(docker exec -it exasoldb sh -c "find / -iname 'exaplus' 2> /dev/null")"
 
 #setting up a mysql db image in docker
 docker pull mysql:5.7.22
