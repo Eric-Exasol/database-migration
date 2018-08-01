@@ -7,10 +7,6 @@ set -e
 curl -L $DB2_PATH -o db2.tar.gz
 tar -xzf db2.tar.gz
 
-curl -L $DB1_CFG -o db1.cfg
-docker cp db1.cfg exasoldb:/
-docker exec -ti exasoldb sh -c "dwad_client stop-wait DB1; dwad_client setup DB1 db1.cfg; dwad_client start DB1"
-
 docker pull ibmcom/db2express-c
 docker run --name db2db -d -p 50000:50000 -e DB2INST1_PASSWORD=test123 -e LICENSE=accept  ibmcom/db2express-c:latest db2start
 #wait until the db2db container if fully initialized
@@ -32,7 +28,7 @@ echo "create or replace CONNECTION db2_connection TO 'jdbc:db2://$ip:50000/sampl
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/
 #execute the file inside the exasoldb container
-docker exec -ti exasoldb sh -c "$EXAPLUS_PATH  -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
+docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.11/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
 
 
 docker cp exasoldb:/exa/etc/EXAConf .
@@ -56,7 +52,7 @@ docker exec -ti exasoldb sh -c "[ ! -e $file ] || rm $file"
 #copy new output.sql file to be executed inside container
 docker cp $file exasoldb:/
 #execute the output.sql file created inside the exasoldb container
-docker exec -ti exasoldb sh -c "$EXAPLUS_PATH  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
+docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.11/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
 #delete the file from current directory
 [ ! -e $file ] || rm $file
 #stop and remove the db2 container

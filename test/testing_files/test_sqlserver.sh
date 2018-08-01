@@ -4,9 +4,6 @@ echo $MY_MESSAGE
 
 set -e
 
-EXAPLUS_PATH=$(docker exec -it exasoldb sh -c "find / -iname 'exaplus' 2> /dev/null")
-
-
 #setting up a sqlserver db image in docker and running a container
 docker pull microsoft/mssql-server-linux:2017-latest
 docker run --name sqlserverdb -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=my_strong_Password' -p 1433:1433 -d microsoft/mssql-server-linux:2017-latest
@@ -25,7 +22,7 @@ echo "create or replace connection sqlserver_connection TO 'jdbc:jtds:sqlserver:
 #copy .sql file to be executed inside container
 docker cp test/testing_files/create_conn.sql exasoldb:/
 #execute the file inside the exasoldb container
-docker exec -ti exasoldb sh -c "$EXAPLUS_PATH -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
+docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.11/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "create_conn.sql" -x"
 
 
 #create the script that we want to execute
@@ -40,7 +37,7 @@ docker exec -ti exasoldb sh -c "[ ! -e $file ] || rm $file"
 #copy new output.sql file to be executed inside container
 docker cp $file exasoldb:/
 #execute the output.sql file created inside the exasoldb container
-docker exec -ti exasoldb sh -c "$EXAPLUS_PATH  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
+docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.11/bin/Console/exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "output.sql" -x"
 #delete the file from current directory
 [ ! -e $file ] || rm $file
 
