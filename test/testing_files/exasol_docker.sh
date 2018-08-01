@@ -19,5 +19,7 @@ echo "test"
 #copy the generate_script.sql file
 docker cp test/generate_script.sql exasoldb:/
 #execute the generate_script.sql file which creates a script inside the exasoldb container
-docker exec -ti exasoldb sh -c " $EXAPLUS_PATH -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x"
+command="$EXAPLUS_PATH -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x"
+docker exec -ti exasoldb sh -c "$command"
+
 #docker exec -ti exasoldb sh -c "/usr/opt/EXASuite-6/EXASolution-6.0.11/bin/Console/exaplus -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x"
