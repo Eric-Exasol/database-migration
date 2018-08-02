@@ -19,6 +19,9 @@ docker cp test/generate_script.sql exasoldb:/
 exaplus="$(docker exec -ti exasoldb find / -iname 'exaplus' 2> /dev/null)"
 echo $exaplus
 EXAPLUS_PATH=`echo $exaplus | sed 's/\\r//g'`
-
-export EXAPLUS_PATH
-docker exec -ti exasoldb $EXAPLUS_PATH  -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x
+exaplus=$(docker exec -ti exasoldb find / -iname 'exaplus' 2> /dev/null) 
+echo $exaplus
+exaplus=`echo $exaplus | sed 's/\\r//g'`
+echo $exaplus
+docker exec -ti exasoldb $exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x
+export exaplus
