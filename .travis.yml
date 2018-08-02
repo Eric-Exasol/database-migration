@@ -31,9 +31,7 @@ before_install:
 - cp -R python-exasol/* .
 - ./tests/write-odbc-ini-in-home.sh "$TRAVIS_BUILD_DIR/EXASOL_ODBC-6.0.2"
 - chmod +x test/testing_files/*
-- "./test/testing_files/exasol_docker.sh"
-- "source ./test/testing_files/export_exaplus_path.sh"
-- echo $EXAPLUS_PATH
+- "source ./test/testing_files/exasol_docker.sh"
 - wget www.unixodbc.org/unixODBC-2.3.4.tar.gz
 - wget $EXAODBC_URL$EXAODBC".tar.gz"
 install:
