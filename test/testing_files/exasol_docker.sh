@@ -16,6 +16,7 @@ sleep 60
 #copy the generate_script.sql file
 docker cp test/generate_script.sql exasoldb:/
 #execute the generate_script.sql file which creates a script inside the exasoldb container
-docker exec -it exasoldb sh -c "find / -iname 'exaplus' 2> /dev/null" | read exaplus
+docker exec -ti exasoldb find / -iname 'exaplus' 2> /dev/null
+exaplus=$(docker exec -ti exasoldb find / -iname 'exaplus' 2> /dev/null) 
 echo $exaplus
-docker exec -ti exasoldb sh -c "$exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x"
+docker exec -ti exasoldb $exaplus  -c "127.0.0.1:8888" -u sys -p exasol -f "generate_script.sql" -x
