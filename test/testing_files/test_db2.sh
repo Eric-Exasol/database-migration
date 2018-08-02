@@ -7,6 +7,10 @@ set -e
 curl -L $DB2_PATH -o db2.tar.gz
 tar -xzf db2.tar.gz
 
+curl -L $DB1_CFG -o db1.cfg
+docker cp db1.cfg exasoldb:/
+docker exec -ti exasoldb sh -c "dwad_client stop-wait DB1; dwad_client setup DB1 db1.cfg; dwad_client start DB1"
+
 docker pull ibmcom/db2express-c
 docker run --name db2db -d -p 50000:50000 -e DB2INST1_PASSWORD=test123 -e LICENSE=accept  ibmcom/db2express-c:latest db2start
 #wait until the db2db container if fully initialized
