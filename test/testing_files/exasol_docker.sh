@@ -10,7 +10,7 @@ docker pull exasol/docker-db:latest
 docker run --name exasoldb -p 127.0.0.1:8899:8888 --detach --privileged --stop-timeout 120  exasol/docker-db:latest
 
 # Wait until database is ready
-#(docker logs -f --tail 0 exasoldb &) 2>&1 | grep -q -i 'stage4: All stages finished'
+(docker logs -f --tail 0 exasoldb &) 2>&1 | grep -q -i 'stage4: All stages finished'
 sleep 60
 
 #copy the generate_script.sql file
